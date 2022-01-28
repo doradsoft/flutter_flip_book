@@ -1,0 +1,19 @@
+name: flip_book
+description: flip_book is a Flutter Flip Book component.
+version: 0.0.1
+homepage: https://github.com/doradsoft/flutter-flip-book
+
+environment:
+  sdk: ">=2.15.1 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.0.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
