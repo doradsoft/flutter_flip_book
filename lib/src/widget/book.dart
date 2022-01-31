@@ -7,6 +7,7 @@ import 'package:flip_book/src/page_delegate/page_builder_delegate.dart';
 import 'package:flip_book/src/page_delegate/page_delegate.dart';
 import 'package:flip_book/src/page_delegate/page_list_delegate.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 abstract class SemanticIndexConverter {
   int pageToSemanticIndex(int page);
@@ -17,8 +18,16 @@ class FlipBook extends StatefulWidget {
   static const _defaultAspectRatio = 3 / 2;
   static const _defaultAxis = Axis.horizontal;
   static const _defaultBufferSize = 2;
-  static const _defaultDirection = TextDirection.ltr;
   static const _defaultPadding = EdgeInsets.all(10);
+
+  static Locale localeInit(Locale? locale) =>
+      locale ?? Locale(intl.Intl.getCurrentLocale());
+  static TextDirection directionInit(
+          TextDirection? direction, Locale? locale) =>
+      direction ??
+      (intl.Bidi.isRtlLanguage(localeInit(locale).languageCode)
+          ? TextDirection.rtl
+          : TextDirection.ltr);
 
   final bool addAutomaticKeepAlives;
 
@@ -29,6 +38,7 @@ class FlipBook extends StatefulWidget {
   final double aspectRatio;
   final FlipBookController controller;
   final TextDirection direction;
+  final Locale locale;
 
   /// Called whenever the page in the center of the viewport changes.
   final ValueChanged<int>? onPageChanged;
@@ -48,12 +58,15 @@ class FlipBook extends StatefulWidget {
     this.aspectRatio = _defaultAspectRatio,
     this.axis = _defaultAxis,
     this.bufferSize = _defaultBufferSize,
-    this.direction = _defaultDirection,
+    TextDirection? direction,
     FlipBookController? controller,
+    Locale? locale,
     this.onPageChanged,
     this.padding = _defaultPadding,
     List<Widget> pages = const <Widget>[],
   })  : controller = controller ?? FlipBookController(totalPages: pages.length),
+        locale = localeInit(locale),
+        direction = directionInit(direction, locale),
         pageDelegate = PageListDelegate(
           pages,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
@@ -65,14 +78,17 @@ class FlipBook extends StatefulWidget {
     this.aspectRatio = _defaultAspectRatio,
     this.axis = _defaultAxis,
     this.bufferSize = _defaultBufferSize,
-    this.direction = _defaultDirection,
+    TextDirection? direction,
     FlipBookController? controller,
+    Locale? locale,
     this.onPageChanged,
     required IndexedWidgetBuilder itemBuilder,
     this.padding = _defaultPadding,
     required int totalPages,
   })  : assert(totalPages >= 4),
         controller = controller ?? FlipBookController(totalPages: totalPages),
+        locale = localeInit(locale),
+        direction = directionInit(direction, locale),
         pageDelegate = PageBuilderDelegate(
           itemBuilder,
           pageCount: totalPages,

@@ -1,3 +1,5 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* First release.
+* RTL support.
+* Aspect ration support.

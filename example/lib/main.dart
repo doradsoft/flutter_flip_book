@@ -1,12 +1,15 @@
 import 'package:flip_book/flip_book.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  ensureInitialized([FlipBookLocales.he]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   final flipBookController = FlipBookController(totalPages: 4);
   final FlipBookToolbarItemsConfig flipBookToolbarItemsConfig =
-      FlipBookToolbarItemsConfig();
+      FlipBookToolbarItemsConfig(locale: FlipBookLocales.he);
   MyApp({Key? key}) : super(key: key);
 
   @override
