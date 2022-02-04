@@ -116,61 +116,63 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
     controller.setVsync(this);
   }
 
-  @override
-  void didChangeDependencies() {
-    _bgSize = MediaQuery.of(context).size;
-    _leafSize = Size((_bgSize.width - widget.padding.horizontal) / 2,
-        _bgSize.height - widget.padding.vertical);
-    super.didChangeDependencies();
-  }
-
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  // }
+  bool get isLTR => widget.direction == TextDirection.ltr;
   @override
   Widget build(BuildContext context) {
     final controller = widget.controller;
-    return Directionality(
-      textDirection: widget.direction,
-      child: Material(
-        child: GestureDetector(
-          onHorizontalDragStart: _onDragStart,
-          onHorizontalDragUpdate: _onDragUpdate,
-          onHorizontalDragEnd: _onDragEnd,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              Container(color: const Color(0xff515151)),
-              Stack(
-                  children: controller.leaves
-                      .map((leaf) => Positioned.fill(
-                          top: widget.padding.top,
-                          bottom: widget.padding.bottom,
-                          left: widget.padding.left,
-                          right: _leafSize.width + widget.padding.right,
-                          child: AnimatedBuilder(
-                              animation: leaf.animation,
-                              builder: (context, animatedBuilderWidget) =>
-                                  _animationBuilder(
-                                      context, animatedBuilderWidget, leaf))))
-                      .toList())
-            ],
+    return LayoutBuilder(builder: (context, constraints) {
+      _bgSize = Size(constraints.maxWidth, constraints.maxHeight);
+      _leafSize = Size((_bgSize.width - widget.padding.horizontal) / 2,
+          _bgSize.height - widget.padding.vertical);
+
+      return Directionality(
+        textDirection: widget.direction,
+        child: Material(
+          child: GestureDetector(
+            onHorizontalDragStart: _onDragStart,
+            onHorizontalDragUpdate: _onDragUpdate,
+            onHorizontalDragEnd: _onDragEnd,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Container(color: const Color(0xff515151)),
+                Stack(
+                    children: controller.leaves
+                        .map((leaf) => Positioned.fill(
+                            top: widget.padding.top,
+                            bottom: widget.padding.bottom,
+                            left: (isLTR ? _leafSize.width : 0) +
+                                widget.padding.left,
+                            right: (isLTR ? 0 : _leafSize.width) +
+                                widget.padding.right,
+                            child: AnimatedBuilder(
+                                animation: leaf.animation,
+                                builder: (context, animatedBuilderWidget) =>
+                                    _animationBuilder(
+                                        context, animatedBuilderWidget, leaf))))
+                        .toList())
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   _animationBuilder(context, animationBuilderWidget, Leaf leaf) {
     final animation = leaf.animation;
     final pageMaterial = Align(
-      alignment: Alignment.centerLeft,
+      alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
       child: AspectRatio(
           aspectRatio: 2 / 3,
-          child: Positioned(
-            right: 0,
-            child: Container(
-              height: _leafSize.height,
-              width: _leafSize.width,
-              color: Color(leaf.index == 0 ? 0xffaaffff : 0xffc1f0db),
-            ),
+          child: Container(
+            height: _leafSize.height,
+            width: _leafSize.width,
+            color: Color(leaf.index == 0 ? 0xffaaffff : 0xffc1f0db),
           )),
     );
     return Transform.translate(
@@ -180,8 +182,8 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
         child: Transform(
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.001)
-            ..rotateY((pi) * animation.value),
-          alignment: Alignment.centerLeft,
+            ..rotateY((isLTR ? -pi : pi) * animation.value),
+          alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
           child: pageMaterial,
         ),
       ),
@@ -193,7 +195,9 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
-    _globalDelta = details.globalPosition.dx - _startingPos;
+    _globalDelta = isLTR
+        ? _startingPos - details.globalPosition.dx
+        : details.globalPosition.dx - _startingPos;
     if (_globalDelta > 0) {
       // forward
       final pos = _globalDelta / _bgSize.width;
@@ -216,9 +220,9 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
   }
 
   void _onDragEnd(DragEndDetails details) {
+    final pps = details.velocity.pixelsPerSecond;
     if (currentLeaf != controller.leaves.length &&
-        ((details.velocity.pixelsPerSecond.dx.abs() > 500 &&
-                details.velocity.pixelsPerSecond.dx > 0) ||
+        ((pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0)) ||
             controller.leaves[currentLeaf].animationController.value > 0.5)) {
       controller.leaves[currentLeaf].animationController.forward(
           from: controller.leaves[currentLeaf].animationController.value);
@@ -226,28 +230,19 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
         currentLeaf++;
       });
     } else {
-      if (details.velocity.pixelsPerSecond.dx.abs() > 500 &&
-              details.velocity.pixelsPerSecond.dx <= 0 ||
-          controller.leaves[turningLeaf].animationController.value <= 0.5) {
-        controller.leaves[turningLeaf].animationController.reverse(
-            from: controller.leaves[turningLeaf].animationController.value);
+      final turningLeafAnimCtrl =
+          controller.leaves[turningLeaf].animationController;
+      if (pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0) ||
+          turningLeafAnimCtrl.value <= 0.5) {
+        turningLeafAnimCtrl.reverse(from: turningLeafAnimCtrl.value);
         if (turningLeaf == currentLeaf - 1) {
           setState(() {
             currentLeaf--;
           });
         }
       } else {
-        controller.leaves[turningLeaf].animationController.forward(
-            from: controller.leaves[turningLeaf].animationController.value);
+        turningLeafAnimCtrl.forward(from: turningLeafAnimCtrl.value);
       }
     }
   }
 }
-
-// void _toggleDrawer() {
-//   if (_animationController.value < 0.5) {
-//     _animationController.forward();
-//   } else {
-//     _animationController.reverse();
-//   }
-// }
