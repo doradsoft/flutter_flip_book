@@ -22,6 +22,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "fullScreen": MessageLookupByLibrary.simpleMessage("מסך-מלא"),
         "next": MessageLookupByLibrary.simpleMessage("הבא"),
         "previous": MessageLookupByLibrary.simpleMessage("הקודם")
       };

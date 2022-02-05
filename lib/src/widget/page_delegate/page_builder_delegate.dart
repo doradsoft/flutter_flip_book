@@ -1,4 +1,5 @@
-import 'package:flip_book/src/page_delegate/page_delegate.dart';
+import 'package:flip_book/src/widget/page_builder.dart';
+import 'package:flip_book/src/widget/page_delegate/page_delegate.dart';
 import 'package:flip_book/src/widgets_ext/widgets_ext.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,11 +21,11 @@ class PageBuilderDelegate extends PageDelegate {
   /// Should return null if asked to build a widget with a greater index than
   /// exists.
   ///
-  /// The delegate wraps the children returned by this builder in
-  /// [RepaintBoundary] widgets.
-  final NullableIndexedWidgetBuilder builder;
+  final PageBuilder builder;
 
-  const PageBuilderDelegate(this.builder,
+  final PageSemantics? pageSemantics;
+
+  const PageBuilderDelegate(this.builder, this.pageSemantics,
       {pageCount, this.addAutomaticKeepAlives = true})
       : super(pageCount);
 
@@ -34,12 +35,9 @@ class PageBuilderDelegate extends PageDelegate {
     if (index < 0 || index >= pageCount) return null;
     Widget? page;
     try {
-      page = builder(context, index);
+      page = builder(context, index, pageSemantics?.indexToSemanticName(index));
     } catch (exception, stackTrace) {
       page = createErrorWidget(exception, stackTrace);
-    }
-    if (page == null) {
-      return null;
     }
     final Key? key = page.key != null ? SaltedValueKey(page.key!) : null;
     if (addAutomaticKeepAlives) page = AutomaticKeepAlive(child: page);

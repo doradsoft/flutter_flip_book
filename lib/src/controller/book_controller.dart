@@ -10,32 +10,13 @@ import 'package:flutter/widgets.dart';
 class FlipBookController extends ChangeNotifier {
   /// The page to show when first creating the [PageView].
   final int initialPage;
-
-  bool get isFullScreen {
-    if (kIsWeb) {
-      return document.fullscreenElement != null;
-    } else {
-      // todo: support more platforms.
-      return false;
-    }
-  }
+  late List<Leaf> leaves = [];
 
   /// books length.
   final int totalPages;
+  bool isFullScreen = false;
 
-  late final List<Leaf> leaves;
-
-  FlipBookController({this.initialPage = 0, required this.totalPages}) {
-    if (kIsWeb) {
-      document.documentElement?.onFullscreenChange.listen((event) {
-        // ignore: avoid_print
-        print(isFullScreen);
-        notifyListeners();
-      });
-    } else {
-      // todo: support more platforms.
-    }
-  }
+  FlipBookController({this.initialPage = 0, required this.totalPages});
 
   Leaf get _currentLeaf => leaves.reduce((result, leaf) {
         if (leaf.isTurned) return leaf;
@@ -101,8 +82,12 @@ class FlipBookController extends ChangeNotifier {
   }
 
   void setVsync(TickerProvider vsync) {
-    leaves = List<Leaf>.generate(
-        (totalPages / 2).ceil(), (i) => Leaf(index: i, vsync: vsync));
+    if (leaves.isEmpty) {
+      leaves = List<Leaf>.generate(
+          (totalPages / 2).ceil(), (i) => Leaf(index: i, vsync: vsync));
+    } else {
+      // leaves.forEach((leaf) {leaf.vs});
+    }
   }
 
   void toggleFullScreen() {
@@ -115,5 +100,7 @@ class FlipBookController extends ChangeNotifier {
     } else {
       // todo: support more platforms.
     }
+    isFullScreen = !isFullScreen;
+    notifyListeners();
   }
 }

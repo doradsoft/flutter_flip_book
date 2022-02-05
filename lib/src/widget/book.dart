@@ -3,16 +3,12 @@ import 'dart:math';
 
 import 'package:flip_book/src/controller/book_controller.dart';
 import 'package:flip_book/src/controller/leaf.dart';
-import 'package:flip_book/src/page_delegate/page_builder_delegate.dart';
-import 'package:flip_book/src/page_delegate/page_delegate.dart';
-import 'package:flip_book/src/page_delegate/page_list_delegate.dart';
+import 'package:flip_book/src/widget/page_builder.dart';
+import 'package:flip_book/src/widget/page_delegate/page_builder_delegate.dart';
+import 'package:flip_book/src/widget/page_delegate/page_delegate.dart';
+import 'package:flip_book/src/widget/page_delegate/page_list_delegate.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
-
-abstract class SemanticIndexConverter {
-  int pageToSemanticIndex(int page);
-  int semanticIndexToPage(int semanticIndex);
-}
 
 class FlipBook extends StatefulWidget {
   static const _defaultAspectRatio = 3 / 2;
@@ -43,6 +39,7 @@ class FlipBook extends StatefulWidget {
   /// Called whenever the page in the center of the viewport changes.
   final ValueChanged<int>? onPageChanged;
   final EdgeInsets padding;
+  final PageSemantics? pageSemantics;
 
   /// A delegate that provides the children for the [PageView].
   ///
@@ -63,6 +60,7 @@ class FlipBook extends StatefulWidget {
     Locale? locale,
     this.onPageChanged,
     this.padding = _defaultPadding,
+    this.pageSemantics,
     List<Widget> pages = const <Widget>[],
   })  : controller = controller ?? FlipBookController(totalPages: pages.length),
         locale = localeInit(locale),
@@ -82,15 +80,17 @@ class FlipBook extends StatefulWidget {
     FlipBookController? controller,
     Locale? locale,
     this.onPageChanged,
-    required IndexedWidgetBuilder itemBuilder,
+    required PageBuilder pageBuilder,
     this.padding = _defaultPadding,
+    this.pageSemantics,
     required int totalPages,
   })  : assert(totalPages >= 4),
         controller = controller ?? FlipBookController(totalPages: totalPages),
         locale = localeInit(locale),
         direction = directionInit(direction, locale),
         pageDelegate = PageBuilderDelegate(
-          itemBuilder,
+          pageBuilder,
+          pageSemantics,
           pageCount: totalPages,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
         ),
@@ -100,7 +100,8 @@ class FlipBook extends StatefulWidget {
   FlipBookState createState() => FlipBookState();
 }
 
-class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
+class FlipBookState extends State<FlipBook>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
   late double _startingPos;
   int currentLeaf = 0;
   int turningLeaf = 0;
@@ -123,6 +124,7 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
   bool get isLTR => widget.direction == TextDirection.ltr;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final controller = widget.controller;
     return LayoutBuilder(builder: (context, constraints) {
       _bgSize = Size(constraints.maxWidth, constraints.maxHeight);
@@ -245,4 +247,7 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin {
       }
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

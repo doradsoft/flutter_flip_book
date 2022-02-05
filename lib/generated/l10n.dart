@@ -50,6 +50,16 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `full screen`
+  String get fullScreen {
+    return Intl.message(
+      'full screen',
+      name: 'fullScreen',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `next`
   String get next {
     return Intl.message(

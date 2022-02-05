@@ -1,16 +1,45 @@
+// ignore_for_file: avoid_function_literals_in_foreach_calls
+
 import 'package:flip_book/flip_book.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class FlipBookControllers extends ChangeNotifier {
+  final flipBookControllerEN = FlipBookController(totalPages: 4);
+  final flipBookControllerHE = FlipBookController(totalPages: 4);
+  bool _disposed = false;
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  FlipBookControllers() {
+    Set.from({flipBookControllerEN, flipBookControllerHE})
+        .forEach((changeNotifier) => changeNotifier.addListener(() {
+              if (!_disposed) notifyListeners();
+            }));
+  }
+}
 
 void main() async {
   ensureInitialized([FlipBookLocales.he]);
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => FlipBookControllers()),
+        ],
+        builder: (context, _) {
+          final app = MyApp();
+          app.build(context);
+          return app;
+        }),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final flipBookControllerEN = FlipBookController(totalPages: 4);
   final flipBookToolbarItemsConfigEN =
       FlipBookToolbarItemsConfig(locale: FlipBookLocales.en);
-  final flipBookControllerHE = FlipBookController(totalPages: 4);
   final flipBookToolbarItemsConfigHE = FlipBookToolbarItemsConfig(
       locale: FlipBookLocales.he, direction: TextDirection.rtl);
 
@@ -18,6 +47,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlipBookControllers buildFlipBookControllers =
+        Provider.of<FlipBookControllers>(context);
     return MaterialApp(
       title: 'Flip book example',
       theme: ThemeData(
@@ -25,71 +56,86 @@ class MyApp extends StatelessWidget {
       ),
       home: Row(
         children: [
-          Expanded(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              AppBar(
-                automaticallyImplyLeading: false,
-                centerTitle: true,
-                title: Row(mainAxisSize: MainAxisSize.min, children: [
-                  FlipBookToolbarItemPrev(
-                          flipBookControllerEN, flipBookToolbarItemsConfigEN)
-                      .child,
-                  FlipBookToolbarItemNext(
-                          flipBookControllerEN, flipBookToolbarItemsConfigEN)
-                      .child,
-                  FlipBookToolbarItemFullscreen(
-                          flipBookControllerEN, flipBookToolbarItemsConfigEN)
-                      .child,
-                ]),
-              ),
-              Expanded(
-                child: FlipBook.builder(
-                  controller: flipBookControllerEN,
-                  itemBuilder: (context, index) {
-                    return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [Text("page ${index + 1}")]);
-                  },
-                  // padding: const EdgeInsets.symmetric(vertical: 10),
-                  totalPages: 4,
-                ),
-              )
-            ]),
-          ),
-          Expanded(
-            child: Directionality(
-              textDirection: TextDirection.rtl,
+          Visibility(
+            visible:
+                !buildFlipBookControllers.flipBookControllerHE.isFullScreen,
+            child: Expanded(
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 AppBar(
                   automaticallyImplyLeading: false,
                   centerTitle: true,
                   title: Row(mainAxisSize: MainAxisSize.min, children: [
-                    FlipBookToolbarItemNext(
-                            flipBookControllerHE, flipBookToolbarItemsConfigHE)
-                        .child,
                     FlipBookToolbarItemPrev(
-                            flipBookControllerHE, flipBookToolbarItemsConfigHE)
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
+                        .child,
+                    FlipBookToolbarItemNext(
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
                         .child,
                     FlipBookToolbarItemFullscreen(
-                            flipBookControllerHE, flipBookToolbarItemsConfigHE)
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
                         .child,
                   ]),
                 ),
                 Expanded(
                   child: FlipBook.builder(
-                    controller: flipBookControllerHE,
-                    direction: TextDirection.rtl,
-                    itemBuilder: (context, index) {
+                    controller: buildFlipBookControllers.flipBookControllerEN,
+                    pageBuilder: (context, paegIndex, semanticPageName) {
                       return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [Text("page ${index + 1}")]);
+                          children: [Text("page ${paegIndex + 1}")]);
                     },
+                    // padding: const EdgeInsets.symmetric(vertical: 10),
                     totalPages: 4,
                   ),
-                ),
+                )
               ]),
+            ),
+          ),
+          Visibility(
+            visible:
+                !buildFlipBookControllers.flipBookControllerEN.isFullScreen,
+            // visible: true,
+            child: Expanded(
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  AppBar(
+                    automaticallyImplyLeading: false,
+                    centerTitle: true,
+                    title: Row(mainAxisSize: MainAxisSize.min, children: [
+                      FlipBookToolbarItemPrev(
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
+                          .child,
+                      FlipBookToolbarItemNext(
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
+                          .child,
+                      FlipBookToolbarItemFullscreen(
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
+                          .child,
+                    ]),
+                  ),
+                  Expanded(
+                    child: FlipBook.builder(
+                      controller: buildFlipBookControllers.flipBookControllerHE,
+                      direction: TextDirection.rtl,
+                      pageBuilder: (context, paegIndex, semanticPageName) {
+                        return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [Text("page ${paegIndex + 1}")]);
+                      },
+                      totalPages: 4,
+                    ),
+                  ),
+                ]),
+              ),
             ),
           )
         ],

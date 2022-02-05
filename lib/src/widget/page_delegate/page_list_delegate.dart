@@ -1,4 +1,4 @@
-import 'package:flip_book/src/page_delegate/page_delegate.dart';
+import 'package:flip_book/src/widget/page_delegate/page_delegate.dart';
 import 'package:flip_book/src/widgets_ext/widgets_ext.dart';
 import 'package:flutter/widgets.dart';
 
