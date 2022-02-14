@@ -10,9 +10,27 @@ class FlipBookTexts {
     return _instance;
   }
 
+  /// `audio`
+  static String audio(Locale locale) => Intl.message(
+        'audio',
+        locale: locale.toString(),
+        name: 'audio',
+        desc: '',
+        args: [],
+      );
+
+  /// `cover`
+  static String cover(Locale locale) => Intl.message(
+        'cover',
+        locale: locale.toString(),
+        name: 'cover',
+        desc: '',
+        args: [],
+      );
+
   /// `fullScreen`
   static String fullScreen(Locale locale) => Intl.message(
-        'fullScreen',
+        'full screen',
         locale: locale.toString(),
         name: 'fullScreen',
         desc: '',
@@ -28,11 +46,29 @@ class FlipBookTexts {
         args: [],
       );
 
+  /// `page number`
+  static String pageNumber(Locale locale) => Intl.message(
+        'page number',
+        locale: locale.toString(),
+        name: 'pageNumber',
+        desc: '',
+        args: [],
+      );
+
   /// `previous`
   static String previous(Locale locale) => Intl.message(
         'previous',
         locale: locale.toString(),
         name: 'previous',
+        desc: '',
+        args: [],
+      );
+
+  /// `table of contents`
+  static String tableOfContents(Locale locale) => Intl.message(
+        'table of contents',
+        locale: locale.toString(),
+        name: 'tableOfContents',
         desc: '',
         args: [],
       );

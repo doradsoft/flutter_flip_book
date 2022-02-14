@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FlipBookControllers extends ChangeNotifier {
-  final flipBookControllerEN = FlipBookController(totalPages: 4);
-  final flipBookControllerHE = FlipBookController(totalPages: 4);
+  final flipBookControllerEN = FlipBookController(totalPages: 12);
+  final flipBookControllerHE = FlipBookController(totalPages: 10);
   bool _disposed = false;
   @override
   void dispose() {
@@ -65,6 +65,14 @@ class MyApp extends StatelessWidget {
                   automaticallyImplyLeading: false,
                   centerTitle: true,
                   title: Row(mainAxisSize: MainAxisSize.min, children: [
+                    FlipBookToolbarItemFullscreen(
+                            buildFlipBookControllers.flipBookControllerHE,
+                            flipBookToolbarItemsConfigEN)
+                        .child,
+                    FlipBookToolbarItemCover(
+                            buildFlipBookControllers.flipBookControllerHE,
+                            flipBookToolbarItemsConfigEN)
+                        .child,
                     FlipBookToolbarItemPrev(
                             buildFlipBookControllers.flipBookControllerEN,
                             flipBookToolbarItemsConfigEN)
@@ -73,9 +81,10 @@ class MyApp extends StatelessWidget {
                             buildFlipBookControllers.flipBookControllerEN,
                             flipBookToolbarItemsConfigEN)
                         .child,
-                    FlipBookToolbarItemFullscreen(
-                            buildFlipBookControllers.flipBookControllerEN,
-                            flipBookToolbarItemsConfigEN)
+                    FlipBookToolbarItemTOC(
+                            buildFlipBookControllers.flipBookControllerHE,
+                            flipBookToolbarItemsConfigEN,
+                            5)
                         .child,
                   ]),
                 ),
@@ -107,6 +116,14 @@ class MyApp extends StatelessWidget {
                     automaticallyImplyLeading: false,
                     centerTitle: true,
                     title: Row(mainAxisSize: MainAxisSize.min, children: [
+                      FlipBookToolbarItemFullscreen(
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
+                          .child,
+                      FlipBookToolbarItemCover(
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
+                          .child,
                       FlipBookToolbarItemPrev(
                               buildFlipBookControllers.flipBookControllerHE,
                               flipBookToolbarItemsConfigHE)
@@ -115,9 +132,10 @@ class MyApp extends StatelessWidget {
                               buildFlipBookControllers.flipBookControllerHE,
                               flipBookToolbarItemsConfigHE)
                           .child,
-                      FlipBookToolbarItemFullscreen(
+                      FlipBookToolbarItemTOC(
                               buildFlipBookControllers.flipBookControllerHE,
-                              flipBookToolbarItemsConfigHE)
+                              flipBookToolbarItemsConfigHE,
+                              5)
                           .child,
                     ]),
                   ),

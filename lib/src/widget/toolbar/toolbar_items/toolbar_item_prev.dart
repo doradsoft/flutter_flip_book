@@ -13,7 +13,7 @@ class FlipBookToolbarItemPrev extends ToolbarItem {
             (context) => Directionality(
                   textDirection: itemsConfig.direction,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.navigate_before_sharp),
                     onPressed: controller.animatePrev,
                     tooltip: FlipBookTexts.previous(itemsConfig.locale),
                   ),

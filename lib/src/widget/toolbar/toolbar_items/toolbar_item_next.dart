@@ -13,7 +13,7 @@ class FlipBookToolbarItemNext extends ToolbarItem {
           (context) => Directionality(
             textDirection: itemsConfig.direction,
             child: IconButton(
-              icon: const Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.navigate_next_sharp),
               onPressed: controller.animateNext,
               tooltip: FlipBookTexts.next(itemsConfig.locale),
             ),

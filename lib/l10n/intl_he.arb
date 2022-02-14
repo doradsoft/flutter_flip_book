@@ -1,5 +1,9 @@
 {
+    "audio": "שמע",
+    "cover":"כריכה",
     "fullScreen": "מסך-מלא",
     "next": "הבא",
-    "previous": "הקודם"
+    "pageNumber": "דף מספר",
+    "previous": "הקודם",
+    "tableOfContents":"תוכן"
 }

@@ -50,6 +50,26 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
+  /// `audio`
+  String get audio {
+    return Intl.message(
+      'audio',
+      name: 'audio',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cover`
+  String get cover {
+    return Intl.message(
+      'cover',
+      name: 'cover',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `full screen`
   String get fullScreen {
     return Intl.message(
@@ -70,11 +90,31 @@ class S {
     );
   }
 
+  /// `page number`
+  String get pageNumber {
+    return Intl.message(
+      'page number',
+      name: 'pageNumber',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `previous`
   String get previous {
     return Intl.message(
       'previous',
       name: 'previous',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `table of contents`
+  String get tableOfContents {
+    return Intl.message(
+      'table of contents',
+      name: 'tableOfContents',
       desc: '',
       args: [],
     );

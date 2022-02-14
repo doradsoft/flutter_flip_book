@@ -16,7 +16,14 @@ class FlipBookController extends ChangeNotifier {
   final int totalPages;
   bool isFullScreen = false;
 
-  FlipBookController({this.initialPage = 0, required this.totalPages});
+  FlipBookController({this.initialPage = 0, required this.totalPages}) {
+    document.documentElement?.onFullscreenChange.listen((event) {
+      if (document.fullscreenElement == null) {
+        isFullScreen = false;
+        notifyListeners();
+      }
+    });
+  }
 
   Leaf get _currentLeaf => leaves.reduce((result, leaf) {
         if (leaf.isTurned) return leaf;

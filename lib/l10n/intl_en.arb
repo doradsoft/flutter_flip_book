@@ -1,5 +1,9 @@
 {
+    "audio": "audio",
+    "cover": "cover",
     "fullScreen": "full screen",
     "next": "next",
-    "previous": "previous"
+    "pageNumber": "page number",
+    "previous": "previous",
+    "tableOfContents": "table of contents"
 }

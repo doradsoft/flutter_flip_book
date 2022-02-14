@@ -22,8 +22,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "audio": MessageLookupByLibrary.simpleMessage("שמע"),
+        "cover": MessageLookupByLibrary.simpleMessage("כריכה"),
         "fullScreen": MessageLookupByLibrary.simpleMessage("מסך-מלא"),
         "next": MessageLookupByLibrary.simpleMessage("הבא"),
-        "previous": MessageLookupByLibrary.simpleMessage("הקודם")
+        "pageNumber": MessageLookupByLibrary.simpleMessage("דף מספר"),
+        "previous": MessageLookupByLibrary.simpleMessage("הקודם"),
+        "tableOfContents": MessageLookupByLibrary.simpleMessage("תוכן")
       };
 }
