@@ -6,6 +6,7 @@ import 'dart:html'; // during development only, for release, use:
 import 'package:flip_book/src/controller/leaf.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tuple/tuple.dart';
 
 class FlipBookController extends ChangeNotifier {
   /// The page to show when first creating the [PageView].
@@ -25,10 +26,22 @@ class FlipBookController extends ChangeNotifier {
     });
   }
 
-  Leaf get _currentLeaf => leaves.reduce((result, leaf) {
-        if (leaf.isTurned) return leaf;
-        return result;
-      });
+  Tuple2<Leaf?, Leaf?> get currentLeaves {
+    int secondLeafIndex = -1;
+    for (var i = leaves.length - 1; i >= 0; i--) {
+      Leaf leaf = leaves[i];
+      if (leaf.isTurned) {
+        secondLeafIndex = leaf.index + 1;
+        break;
+      }
+    }
+
+    return secondLeafIndex == -1
+        ? Tuple2(null, leaves[0])
+        : secondLeafIndex == leaves.length
+            ? Tuple2(leaves[secondLeafIndex - 1], null)
+            : Tuple2(leaves[secondLeafIndex - 1], leaves[secondLeafIndex]);
+  }
 
   /// Animates the position from its current value to the given value.
   ///
@@ -67,14 +80,16 @@ class FlipBookController extends ChangeNotifier {
   Future<void> animateNext(
       {duration = const Duration(milliseconds: 800),
       curve = Curves.easeInOutQuad}) {
-    return animateTo(_currentLeaf.pages.last + 1,
+    if (currentLeaves.item2 == null) return Future.value();
+    return animateTo(currentLeaves.item2!.pages.last + 1,
         duration: duration, curve: curve);
   }
 
   Future<void> animatePrev(
       {duration = const Duration(milliseconds: 800),
       curve = Curves.easeInOutQuad}) {
-    return animateTo(_currentLeaf.pages.first - 1,
+    if (currentLeaves.item1 == null) return Future.value();
+    return animateTo(currentLeaves.item1!.pages.first - 2,
         duration: duration, curve: curve);
   }
 

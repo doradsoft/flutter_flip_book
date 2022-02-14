@@ -28,11 +28,11 @@ class Leaf extends ChangeNotifier {
   }) async {
     if (isTurned) {
       if (page < pages.first) {
-        animationController.reverse();
+        return animationController.reverse();
       }
     } else {
       if (page > pages.last) {
-        animationController.forward();
+        return animationController.forward();
       }
     }
   }
