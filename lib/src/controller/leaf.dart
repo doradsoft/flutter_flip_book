@@ -6,6 +6,7 @@ class Leaf extends ChangeNotifier {
   final int index;
   late final List<int> pages;
   bool get isTurned => animationController.value == 1;
+  bool get isTurning => animationController.value != 0;
 
   Leaf({required this.index, required TickerProvider vsync}) : super() {
     animationController = AnimationController(

@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 
 class FlipBookControllers extends ChangeNotifier {
   final flipBookControllerEN = FlipBookController(totalPages: 12);
-  final flipBookControllerHE = FlipBookController(totalPages: 10);
+  // final flipBookControllerHE = FlipBookController(totalPages: 10);
+  final flipBookControllerHE = FlipBookController(totalPages: 6);
   bool _disposed = false;
   @override
   void dispose() {

@@ -43,6 +43,29 @@ class FlipBookController extends ChangeNotifier {
             : Tuple2(leaves[secondLeafIndex - 1], leaves[secondLeafIndex]);
   }
 
+  Tuple2<Leaf?, Leaf?> get currentOrTurningLeaves {
+    int secondLeafIndex = -1;
+    for (var i = leaves.length - 1; i >= 0; i--) {
+      Leaf leaf = leaves[i];
+      if (leaf.isTurned || leaf.isTurning) {
+        secondLeafIndex = leaf.index + 1;
+        break;
+      }
+    }
+
+    return secondLeafIndex == -1
+        ? Tuple2(null, leaves[0])
+        : secondLeafIndex == leaves.length
+            ? Tuple2(leaves[secondLeafIndex - 1], null)
+            : Tuple2(leaves[secondLeafIndex - 1], leaves[secondLeafIndex]);
+  }
+
+  Leaf get currentLeaf =>
+      currentLeaves.toList().lastWhere((leaf) => leaf != null);
+
+  bool get isClosed => currentOrTurningLeaves.item1 == null;
+  bool get isClosedInverted => currentLeaves.item2 == null;
+
   /// Animates the position from its current value to the given value.
   ///
   /// Any active animation is canceled. If the user is currently paging, that
@@ -53,7 +76,7 @@ class FlipBookController extends ChangeNotifier {
   ///
   /// An animation will be interrupted whenever the user attempts to page
   /// manually, or whenever another activity is started, or whenever the
-  /// animation reache an edge of the books and attempts to overscroll.
+  /// animation reache an edge of the book and attempts to page further.
   ///
   /// The animation is indifferent to changes to the viewport or content
   /// dimensions.
