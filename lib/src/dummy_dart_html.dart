@@ -1,4 +1,5 @@
 class HtmlDocument {
+  HtmlDocumentElement? fullscreenElement;
   final HtmlDocumentElement? documentElement = HtmlDocumentElement();
   exitFullscreen() {}
 }
@@ -10,6 +11,8 @@ class HtmlDocumentElement {
 
 class Event {}
 
-class ElementStream<T> {}
+class ElementStream<T> {
+  void listen(event) {}
+}
 
 final HtmlDocument document = HtmlDocument();

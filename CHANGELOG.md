@@ -1,5 +1,5 @@
-## 0.0.1
+# 0.0.1
 
-* First release.
+* Initial release.
 * RTL support.
-* Aspect ration support.
+* Aspect ratio support.

@@ -10,7 +10,7 @@ class PageBuilderDelegate extends PageDelegate {
   /// widgets so that children can use [KeepAliveNotification]s to preserve
   /// their state when they would otherwise be garbage collected off-screen.
   ///
-  /// Defaults to true.
+  /// Defaults to false.
   final bool addAutomaticKeepAlives;
 
   /// Called to build pages.
@@ -25,17 +25,16 @@ class PageBuilderDelegate extends PageDelegate {
 
   final PageSemantics? pageSemantics;
 
-  const PageBuilderDelegate(this.builder, this.pageSemantics,
-      {pageCount, this.addAutomaticKeepAlives = true})
+  const PageBuilderDelegate(this.builder, this.pageSemantics, {pageCount, this.addAutomaticKeepAlives = false})
       : super(pageCount);
 
   @override
   @pragma('vm:notify-debugger-on-exception')
-  Widget? build(BuildContext context, int index) {
+  Widget? build(BuildContext context, Size pageSize, int index) {
     if (index < 0 || index >= pageCount) return null;
     Widget? page;
     try {
-      page = builder(context, index, pageSemantics?.indexToSemanticName(index));
+      page = builder(context, pageSize, index, pageSemantics?.indexToSemanticName(index));
     } catch (exception, stackTrace) {
       page = createErrorWidget(exception, stackTrace);
     }

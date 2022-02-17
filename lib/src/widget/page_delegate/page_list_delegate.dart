@@ -49,11 +49,10 @@ class PageListDelegate extends PageDelegate {
   /// their state when they would otherwise be garbage collected off-screen.
   /// Defaults to true.
   final bool addAutomaticKeepAlives;
-  PageListDelegate(this.pages, {this.addAutomaticKeepAlives = true})
-      : super(pages.length);
+  PageListDelegate(this.pages, {this.addAutomaticKeepAlives = true}) : super(pages.length);
 
   @override
-  Widget? build(BuildContext context, int index) {
+  Widget? build(BuildContext context, Size pageSize, int index) {
     if (index < 0 || index >= pages.length) {
       return null;
     }

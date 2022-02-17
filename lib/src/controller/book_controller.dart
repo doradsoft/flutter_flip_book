@@ -1,13 +1,13 @@
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html'; // during development only, for release, use:
-// import 'package:flip_book/src/dummy_dart_html.dart'
-//     if (dart.library.html) 'dart:html';
+// import 'dart:html'; // during development only, for release, use:
+import 'package:flip_book/src/dummy_dart_html.dart' if (dart.library.html) 'dart:html';
 
 import 'package:flip_book/src/controller/leaf.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';
 
+/// [FlipBook]'s controller
 class FlipBookController extends ChangeNotifier {
   /// The page to show when first creating the [PageView].
   bool animating = false;
@@ -17,14 +17,22 @@ class FlipBookController extends ChangeNotifier {
   /// books length.
   final int totalPages;
   bool isFullScreen = false;
-
+  
+  /// [FlipBookController]'s constructor
+  /// 
+  /// The [initialPage] defines the page to show at the first time
+  /// The [totalPages] defines the amount of pages in the book
   FlipBookController({this.initialPage = 0, required this.totalPages}) {
-    document.documentElement?.onFullscreenChange.listen((event) {
-      if (document.fullscreenElement == null) {
-        isFullScreen = false;
-        notifyListeners();
-      }
-    });
+    if (kIsWeb) {
+      document.documentElement?.onFullscreenChange.listen((event) {
+        if (document.fullscreenElement == null) {
+          isFullScreen = false;
+          notifyListeners();
+        }
+      });
+    } else {
+      // todo: support more platforms.
+    }
   }
 
   Tuple2<Leaf?, Leaf?> get currentLeaves {
@@ -61,33 +69,34 @@ class FlipBookController extends ChangeNotifier {
             : Tuple2(leaves[secondLeafIndex - 1], leaves[secondLeafIndex]);
   }
 
-  Leaf get currentLeaf =>
-      currentLeaves.toList().lastWhere((leaf) => leaf != null);
+  Leaf get currentLeaf => currentLeaves.toList().lastWhere((leaf) => leaf != null);
 
   bool get isClosed => currentOrTurningLeaves.item1 == null;
   bool get isClosedInverted => currentLeaves.item2 == null;
 
-  /// Animates the position from its current value to the given value.
-  ///
-  /// Any active animation is canceled. If the user is currently paging, that
-  /// action is canceled.
+
+
+  /// Animates current leaf forward
+  Future<void> animateNext({duration = const Duration(milliseconds: 800), curve = Curves.easeInOutQuad}) async {
+    if (animating || currentLeaves.item2 == null) return Future.value();
+    return await animateTo(currentLeaves.item2!.pages.last + 1, duration: duration, curve: curve);
+  }
+
+  /// Animates current leaf backward
+  Future<void> animatePrev({duration = const Duration(milliseconds: 800), curve = Curves.easeInOutQuad}) async {
+    if (animating || currentLeaves.item1 == null) return Future.value();
+    return await animateTo(currentLeaves.item1!.pages.first - 2, duration: duration, curve: curve);
+  }
+  /// Animates the position from its current page to the given page.
   ///
   /// The returned [Future] will complete when the animation ends, whether it
   /// completed successfully or whether it was interrupted prematurely.
-  ///
-  /// An animation will be interrupted whenever the user attempts to page
-  /// manually, or whenever another activity is started, or whenever the
-  /// animation reache an edge of the book and attempts to page further.
-  ///
-  /// The animation is indifferent to changes to the viewport or content
-  /// dimensions.
   ///
   /// The duration must not be zero. To jump to a particular value without an
   /// animation, use [jumpTo].
   ///
   /// When calling [animateTo] in widget tests, `await`ing the returned
-  /// [Future] may cause the test to hang and timeout. Instead, use
-  /// [WidgetTester.pumpAndSettle].
+  /// [Future] may cause the test to hang and timeout. Instead, use WidgetTester.pumpAndSettle.
   Future<void> animateTo(
     int page, {
     required Duration duration,
@@ -95,34 +104,14 @@ class FlipBookController extends ChangeNotifier {
   }) async {
     animating = true;
     await Future.wait<void>(<Future<void>>[
-      ...leaves
-          .map((leaf) => leaf.animateTo(page, duration: duration, curve: curve))
+      ...leaves.map((leaf) => leaf.animateTo(page, duration: duration, curve: curve))
       // for (int i = 0; i < _positions.length; i += 1)
       // _positions[i].animateTo(offset, duration: duration, curve: curve),
     ]);
     animating = false;
   }
 
-  Future<void> animateNext(
-      {duration = const Duration(milliseconds: 800),
-      curve = Curves.easeInOutQuad}) async {
-    if (animating || currentLeaves.item2 == null) return Future.value();
-    return await animateTo(currentLeaves.item2!.pages.last + 1,
-        duration: duration, curve: curve);
-  }
-
-  Future<void> animatePrev(
-      {duration = const Duration(milliseconds: 800),
-      curve = Curves.easeInOutQuad}) async {
-    if (animating || currentLeaves.item1 == null) return Future.value();
-    return await animateTo(currentLeaves.item1!.pages.first - 2,
-        duration: duration, curve: curve);
-  }
-
-  /// Jumps from its current value to the given value, without animation.
-  /// Any active animation is canceled. If the user is currently scrolling, that
-  /// action is canceled.
-  ///
+  /// Jumps from its current page to a given page, without animation.
   void jumpTo(int page) {
     assert(page >= 0 && page < page);
     // for (final ScrollPosition position in List<ScrollPosition>.from(_positions))
@@ -131,13 +120,13 @@ class FlipBookController extends ChangeNotifier {
 
   void setVsync(TickerProvider vsync) {
     if (leaves.isEmpty) {
-      leaves = List<Leaf>.generate(
-          (totalPages / 2).ceil(), (i) => Leaf(index: i, vsync: vsync));
+      leaves = List<Leaf>.generate((totalPages / 2).ceil(), (i) => Leaf(index: i, vsync: vsync));
     } else {
       // leaves.forEach((leaf) {leaf.vs});
     }
   }
 
+  /// shows the book in fullscreen / exiting full screen
   void toggleFullScreen() {
     if (kIsWeb) {
       if (isFullScreen) {

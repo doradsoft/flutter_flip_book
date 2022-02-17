@@ -1,9 +1,9 @@
 name: flip_book_example
-description: An exampe project showcasing flip_book.
-
-publish_to: 'none'
-
 version: 1.0.0+1
+description: An example project showcasing flip_book.
+
+# The following line prevents the package from being accidentally published to
+publish_to: 'none'
 
 environment:
   sdk: ">=2.15.1 <3.0.0"

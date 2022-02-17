@@ -17,15 +17,10 @@ class FlipBook extends StatefulWidget {
   static const _defaultBufferSize = 2;
   static const _defaultPadding = EdgeInsets.all(10);
 
-  static Locale localeInit(Locale? locale) =>
-      locale ?? Locale(intl.Intl.getCurrentLocale());
-  static TextDirection directionInit(
-          TextDirection? direction, Locale? locale) =>
-      direction ??
-      (intl.Bidi.isRtlLanguage(localeInit(locale).languageCode)
-          ? TextDirection.rtl
-          : TextDirection.ltr);
-
+  static Locale localeInit(Locale? locale) => locale ?? Locale(intl.Intl.getCurrentLocale());
+  static TextDirection directionInit(TextDirection? direction, Locale? locale) =>
+      direction ?? (intl.Bidi.isRtlLanguage(localeInit(locale).languageCode) ? TextDirection.rtl : TextDirection.ltr);
+  static bool totalPagesValidation(int? totalPages) => totalPages != null && totalPages >= 4 && totalPages % 2 == 0;
   final bool addAutomaticKeepAlives;
 
   /// The axis along which the book pages flip.
@@ -42,17 +37,18 @@ class FlipBook extends StatefulWidget {
   final EdgeInsets padding;
   final PageSemantics? pageSemantics;
 
-  /// A delegate that provides the children for the [PageView].
+  /// A delegate that provides the children for the [FlipBook].
   ///
-  /// The [FlipBook.custom] constructor lets you specify this delegate
-  /// explicitly. The [FlipBook] and [FlipBook.builder] constructors create a
+  /// The [FlipBook] and [FlipBook.builder] constructors create a
   /// [pageDelegate] that wraps the given [List] and [IndexedWidgetBuilder],
   /// respectively.
+  /// in the future: FlipBook.custom constructor will let you specify this delegate
+  /// explicitly.
   final PageDelegate pageDelegate;
   final int bufferSize;
   FlipBook({
     Key? key,
-    this.addAutomaticKeepAlives = true,
+    this.addAutomaticKeepAlives = false,
     this.aspectRatio = _defaultAspectRatio,
     this.axis = _defaultAxis,
     this.bufferSize = _defaultBufferSize,
@@ -73,7 +69,7 @@ class FlipBook extends StatefulWidget {
         super(key: key);
   FlipBook.builder({
     Key? key,
-    this.addAutomaticKeepAlives = true,
+    this.addAutomaticKeepAlives = false,
     this.aspectRatio = _defaultAspectRatio,
     this.axis = _defaultAxis,
     this.bufferSize = _defaultBufferSize,
@@ -84,15 +80,15 @@ class FlipBook extends StatefulWidget {
     required PageBuilder pageBuilder,
     this.padding = _defaultPadding,
     this.pageSemantics,
-    required int totalPages,
-  })  : assert(totalPages >= 4),
-        controller = controller ?? FlipBookController(totalPages: totalPages),
+    int? totalPages,
+  })  : assert(totalPagesValidation(controller?.totalPages) || totalPagesValidation(totalPages)),
+        controller = controller ?? FlipBookController(totalPages: totalPages!),
         locale = localeInit(locale),
         direction = directionInit(direction, locale),
         pageDelegate = PageBuilderDelegate(
           pageBuilder,
           pageSemantics,
-          pageCount: totalPages,
+          pageCount: totalPages ?? controller!.totalPages,
           addAutomaticKeepAlives: addAutomaticKeepAlives,
         ),
         super(key: key);
@@ -103,8 +99,7 @@ class FlipBook extends StatefulWidget {
 
 enum Direction { backward, forward }
 
-class FlipBookState extends State<FlipBook>
-    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
+class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
   Leaf? currentLeaf;
   Size _bgSize = const Size(0, 0);
   Direction? _direction;
@@ -127,8 +122,7 @@ class FlipBookState extends State<FlipBook>
     final controller = widget.controller;
     return LayoutBuilder(builder: (context, constraints) {
       _bgSize = Size(constraints.maxWidth, constraints.maxHeight);
-      _leafSize = Size((_bgSize.width - widget.padding.horizontal) / 2,
-          _bgSize.height - widget.padding.vertical);
+      _leafSize = Size((_bgSize.width - widget.padding.horizontal) / 2, _bgSize.height - widget.padding.vertical);
       return Directionality(
         textDirection: widget.direction,
         child: Material(
@@ -144,11 +138,9 @@ class FlipBookState extends State<FlipBook>
                     animations: controller.leaves.map((leaf) => leaf.animation),
                     builder: (_, __) => Stack(
                             children: [
-                          ...controller.leaves.reversed.where(
-                              (leaf) => leaf.animationController.value < 0.5),
-                          ...controller.leaves.where(
-                              (leaf) => leaf.animationController.value >= 0.5)
-                        ].map(leafBuilder).toList()))
+                          ...controller.leaves.reversed.where((leaf) => leaf.animationController.value < 0.5),
+                          ...controller.leaves.where((leaf) => leaf.animationController.value >= 0.5)
+                        ].map((leaf) => leafBuilder(context, leaf)).toList()))
               ],
             ),
           ),
@@ -157,25 +149,21 @@ class FlipBookState extends State<FlipBook>
     });
   }
 
-  Widget leafBuilder(Leaf leaf) {
-    final animation = leaf.animation;
+  Widget leafBuilder(BuildContext context, Leaf leaf) {
+    final animationVal = leaf.animationController.value;
     final pageMaterial = Align(
       alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
       child: AspectRatio(
           aspectRatio: 2 / 3,
-          child: Container(
-            height: _leafSize.height,
-            width: _leafSize.width,
-            color: leaf.index == 0
-                ? const Color(0xffaaffff)
-                : leaf.index == 1
-                    ? const Color(0xffc1f0cf)
-                    : leaf.index == 2
-                        ? const Color(0xffd157bb)
-                        : leaf.index == 3
-                            ? const Color(0xffd1c0db)
-                            : const Color(0xffe1b02b),
-          )),
+          child: SizedBox(
+              height: _leafSize.height,
+              width: _leafSize.width,
+              child: animationVal < 0.5
+                  ? Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(pi),
+                      child: widget.pageDelegate.build(context, _leafSize, leaf.pages.first))
+                  : widget.pageDelegate.build(context, _leafSize, leaf.pages.last))),
     );
     return Positioned.fill(
       top: widget.padding.top,
@@ -189,7 +177,7 @@ class FlipBookState extends State<FlipBook>
           child: Transform(
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
-              ..rotateY((isLTR ? -pi : pi) * animation.value),
+              ..rotateY((isLTR ? -pi : pi) * animationVal),
             alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
             child: pageMaterial,
           ),
@@ -211,16 +199,14 @@ class FlipBookState extends State<FlipBook>
     if (controller.animating) {
       return;
     }
-    _delta = isLTR
-        ? _startingPos - details.globalPosition.dx
-        : details.globalPosition.dx - _startingPos;
+    _delta = isLTR ? _startingPos - details.globalPosition.dx : details.globalPosition.dx - _startingPos;
     if (_delta.abs() > _bgSize.width) return;
     if (_delta == 0) return;
-    _direction =
-        _direction ?? ((_delta > 0) ? Direction.forward : Direction.backward);
+    _direction = _direction ?? ((_delta > 0) ? Direction.forward : Direction.backward);
     switch (_direction!) {
       case Direction.forward:
         final pos = _delta / _bgSize.width;
+        print(pos);
         // drag overflow
         if (pos > 1) {
           return;
@@ -237,6 +223,7 @@ class FlipBookState extends State<FlipBook>
       case Direction.backward:
         // reverse
         final pos = 1 - (_delta.abs() / _bgSize.width);
+        print(pos);
         // drag overflow
         if (pos < 0) {
           return;
@@ -248,8 +235,7 @@ class FlipBookState extends State<FlipBook>
             currentLeaf = controller.currentOrTurningLeaves.item1!;
           }
         }
-        controller.currentOrTurningLeaves.item1!.animationController.value =
-            pos;
+        controller.currentOrTurningLeaves.item1!.animationController.value = pos;
     }
   }
 
