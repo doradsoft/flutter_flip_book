@@ -271,27 +271,12 @@ class FlipBookState extends State<FlipBook>
     } else {
       animate = turningLeafAnimCtrl.reverse;
     }
-    // if ((pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0) ||
-    //     turningLeafAnimCtrl.value > 0.5)) {
-    //   animate = turningLeafAnimCtrl.forward;
-    // } else {
-    //   print(pps.dx.abs() > 500);
-    //   print(isLTR ? pps.dx > 0 : pps.dx <= 0);
-    //   if ((pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0)) ||
-    //       turningLeafAnimCtrl.value <= 0.5) {
-    //     animate = turningLeafAnimCtrl.reverse;
-    //   } else {
-    //     animate = turningLeafAnimCtrl.forward;
-    //   }
-    // }
     controller.animating = true;
     _direction = null;
     _startingPos = 0;
     await animate(from: turningLeafAnimCtrl.value);
     controller.animating = false;
     currentLeaf = null;
-    // print(
-    //     "backward ${currentLeaf!.index} with status ${turningLeafAnimCtrl.status}");
   }
 
   @override

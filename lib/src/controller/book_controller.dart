@@ -10,6 +10,7 @@ import 'package:tuple/tuple.dart';
 
 class FlipBookController extends ChangeNotifier {
   /// The page to show when first creating the [PageView].
+  bool animating = false;
   final int initialPage;
   late List<Leaf> leaves = [];
 
@@ -92,27 +93,29 @@ class FlipBookController extends ChangeNotifier {
     required Duration duration,
     required Curve curve,
   }) async {
+    animating = true;
     await Future.wait<void>(<Future<void>>[
       ...leaves
           .map((leaf) => leaf.animateTo(page, duration: duration, curve: curve))
       // for (int i = 0; i < _positions.length; i += 1)
       // _positions[i].animateTo(offset, duration: duration, curve: curve),
     ]);
+    animating = false;
   }
 
   Future<void> animateNext(
       {duration = const Duration(milliseconds: 800),
-      curve = Curves.easeInOutQuad}) {
-    if (currentLeaves.item2 == null) return Future.value();
-    return animateTo(currentLeaves.item2!.pages.last + 1,
+      curve = Curves.easeInOutQuad}) async {
+    if (animating || currentLeaves.item2 == null) return Future.value();
+    return await animateTo(currentLeaves.item2!.pages.last + 1,
         duration: duration, curve: curve);
   }
 
   Future<void> animatePrev(
       {duration = const Duration(milliseconds: 800),
-      curve = Curves.easeInOutQuad}) {
-    if (currentLeaves.item1 == null) return Future.value();
-    return animateTo(currentLeaves.item1!.pages.first - 2,
+      curve = Curves.easeInOutQuad}) async {
+    if (animating || currentLeaves.item1 == null) return Future.value();
+    return await animateTo(currentLeaves.item1!.pages.first - 2,
         duration: duration, curve: curve);
   }
 
