@@ -100,14 +100,18 @@ class FlipBook extends StatefulWidget {
   FlipBookState createState() => FlipBookState();
 }
 
+enum Direction { backward, forward }
+
 class FlipBookState extends State<FlipBook>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
-  late double _startingPos;
   Leaf? currentLeaf;
-  late FlipBookController controller;
+  bool _animating = false;
   Size _bgSize = const Size(0, 0);
+  Direction? _direction;
+  double _delta = 0;
   Size _leafSize = const Size(0, 0);
-  double _globalDelta = 0;
+  late double _startingPos;
+  late FlipBookController controller;
 
   @override
   void initState() {
@@ -196,67 +200,89 @@ class FlipBookState extends State<FlipBook>
   }
 
   void _onDragStart(DragStartDetails details) {
+    if (currentLeaf != null) {
+      _direction = null;
+      _startingPos = 0;
+      return;
+    }
+    if (_animating) {
+      return;
+    }
     _startingPos = details.globalPosition.dx;
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
-    _globalDelta = isLTR
+    if (_animating) {
+      return;
+    }
+    // print("updating ${currentLeaf?.index}");
+    _delta = isLTR
         ? _startingPos - details.globalPosition.dx
         : details.globalPosition.dx - _startingPos;
-    // forward
-    if (_globalDelta > 0) {
-      final pos = _globalDelta / _bgSize.width;
-      // drag overflow
-      if (pos > 1) {
-        return;
-      }
-      if (currentLeaf == null) {
-        if (controller.isClosedInverted) {
+    if (_delta.abs() > _bgSize.width) return;
+    if (_delta == 0) return;
+    _direction =
+        _direction ?? ((_delta > 0) ? Direction.forward : Direction.backward);
+    switch (_direction!) {
+      case Direction.forward:
+        final pos = _delta / _bgSize.width;
+        // drag overflow
+        if (pos > 1) {
           return;
-        } else {
-          currentLeaf = controller.currentOrTurningLeaves.item2!;
         }
-      }
-      controller.currentLeaf.animationController.value = pos;
-    }
-    // backward
-    else if (_globalDelta < 0) {
-      // reverse
-      final pos = 1 - (_globalDelta.abs() / _bgSize.width);
-      // drag overflow
-      if (pos < 0) {
-        return;
-      }
-      if (currentLeaf == null) {
-        if (controller.isClosed) {
-          print("isClosed");
+        if (currentLeaf == null) {
+          if (controller.isClosedInverted) {
+            return;
+          } else {
+            currentLeaf = controller.currentOrTurningLeaves.item2!;
+          }
+        }
+        controller.currentLeaf.animationController.value = pos;
+        break;
+      case Direction.backward:
+        // reverse
+        final pos = 1 - (_delta.abs() / _bgSize.width);
+        // drag overflow
+        if (pos < 0) {
           return;
-        } else {
-          currentLeaf = controller.currentOrTurningLeaves.item1!;
         }
-      }
-      controller.currentOrTurningLeaves.item1!.animationController.value = pos;
+        if (currentLeaf == null) {
+          if (controller.isClosed) {
+            return;
+          } else {
+            currentLeaf = controller.currentOrTurningLeaves.item1!;
+          }
+        }
+        controller.currentOrTurningLeaves.item1!.animationController.value =
+            pos;
     }
   }
 
-  void _onDragEnd(DragEndDetails details) {
+  void _onDragEnd(DragEndDetails details) async {
+    if (currentLeaf == null) return;
+    TickerFuture Function({double? from}) animate;
     final pps = details.velocity.pixelsPerSecond;
+    final turningLeafAnimCtrl = currentLeaf!.animationController;
     if (currentLeaf != controller.leaves.last &&
         ((pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0)) ||
-            currentLeaf!.animationController.value > 0.5)) {
-      currentLeaf!.animationController
-          .forward(from: currentLeaf!.animationController.value);
+            turningLeafAnimCtrl.value > 0.5)) {
+      animate = turningLeafAnimCtrl.forward;
     } else {
-      final turningLeafAnimCtrl = currentLeaf!.animationController;
       if (pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0) ||
           turningLeafAnimCtrl.value <= 0.5) {
-        turningLeafAnimCtrl.reverse(from: turningLeafAnimCtrl.value);
+        animate = turningLeafAnimCtrl.reverse;
       } else {
-        turningLeafAnimCtrl.forward(from: turningLeafAnimCtrl.value);
+        animate = turningLeafAnimCtrl.forward;
       }
     }
+    _animating = true;
+    await animate(from: turningLeafAnimCtrl.value);
+    _animating = false;
     currentLeaf = null;
+    _direction = null;
     _startingPos = 0;
+    // print(
+    //     "backward ${currentLeaf!.index} with status ${turningLeafAnimCtrl.status}");
   }
 
   @override
