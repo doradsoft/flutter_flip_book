@@ -105,7 +105,6 @@ enum Direction { backward, forward }
 class FlipBookState extends State<FlipBook>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
   Leaf? currentLeaf;
-  bool _animating = false;
   Size _bgSize = const Size(0, 0);
   Direction? _direction;
   double _delta = 0;
@@ -142,7 +141,7 @@ class FlipBookState extends State<FlipBook>
               children: <Widget>[
                 Container(color: const Color(0xff515151)),
                 Stack(
-                    children: controller.leaves
+                    children: controller.leaves.reversed
                         .map((leaf) => Positioned.fill(
                             top: widget.padding.top,
                             bottom: widget.padding.bottom,
@@ -200,22 +199,18 @@ class FlipBookState extends State<FlipBook>
   }
 
   void _onDragStart(DragStartDetails details) {
-    if (currentLeaf != null) {
+    if (currentLeaf != null || controller.animating) {
       _direction = null;
       _startingPos = 0;
-      return;
-    }
-    if (_animating) {
       return;
     }
     _startingPos = details.globalPosition.dx;
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
-    if (_animating) {
+    if (controller.animating) {
       return;
     }
-    // print("updating ${currentLeaf?.index}");
     _delta = isLTR
         ? _startingPos - details.globalPosition.dx
         : details.globalPosition.dx - _startingPos;
@@ -259,28 +254,42 @@ class FlipBookState extends State<FlipBook>
   }
 
   void _onDragEnd(DragEndDetails details) async {
-    if (currentLeaf == null) return;
+    if (currentLeaf == null) {
+      _direction = null;
+      _startingPos = 0;
+      return;
+    }
     TickerFuture Function({double? from}) animate;
     final pps = details.velocity.pixelsPerSecond;
     final turningLeafAnimCtrl = currentLeaf!.animationController;
-    if (currentLeaf != controller.leaves.last &&
-        ((pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0)) ||
-            turningLeafAnimCtrl.value > 0.5)) {
+    if (pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0)) {
+      animate = turningLeafAnimCtrl.forward;
+    } else if (pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0)) {
+      animate = turningLeafAnimCtrl.reverse;
+    } else if (turningLeafAnimCtrl.value > 0.5) {
       animate = turningLeafAnimCtrl.forward;
     } else {
-      if (pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0) ||
-          turningLeafAnimCtrl.value <= 0.5) {
-        animate = turningLeafAnimCtrl.reverse;
-      } else {
-        animate = turningLeafAnimCtrl.forward;
-      }
+      animate = turningLeafAnimCtrl.reverse;
     }
-    _animating = true;
-    await animate(from: turningLeafAnimCtrl.value);
-    _animating = false;
-    currentLeaf = null;
+    // if ((pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0) ||
+    //     turningLeafAnimCtrl.value > 0.5)) {
+    //   animate = turningLeafAnimCtrl.forward;
+    // } else {
+    //   print(pps.dx.abs() > 500);
+    //   print(isLTR ? pps.dx > 0 : pps.dx <= 0);
+    //   if ((pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0)) ||
+    //       turningLeafAnimCtrl.value <= 0.5) {
+    //     animate = turningLeafAnimCtrl.reverse;
+    //   } else {
+    //     animate = turningLeafAnimCtrl.forward;
+    //   }
+    // }
+    controller.animating = true;
     _direction = null;
     _startingPos = 0;
+    await animate(from: turningLeafAnimCtrl.value);
+    controller.animating = false;
+    currentLeaf = null;
     // print(
     //     "backward ${currentLeaf!.index} with status ${turningLeafAnimCtrl.status}");
   }
