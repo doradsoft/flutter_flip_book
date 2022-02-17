@@ -128,7 +128,16 @@ class FlipBookState extends State<FlipBook>
       _bgSize = Size(constraints.maxWidth, constraints.maxHeight);
       _leafSize = Size((_bgSize.width - widget.padding.horizontal) / 2,
           _bgSize.height - widget.padding.vertical);
-
+      // ignore: prefer_function_declarations_over_variables
+      Widget leafMapper(leaf) => Positioned.fill(
+          top: widget.padding.top,
+          bottom: widget.padding.bottom,
+          left: (isLTR ? _leafSize.width : 0) + widget.padding.left,
+          right: (isLTR ? 0 : _leafSize.width) + widget.padding.right,
+          child: AnimatedBuilder(
+              animation: leaf.animation,
+              builder: (context, animatedBuilderWidget) =>
+                  _animationBuilder(context, animatedBuilderWidget, leaf)));
       return Directionality(
         textDirection: widget.direction,
         child: Material(
@@ -141,20 +150,12 @@ class FlipBookState extends State<FlipBook>
               children: <Widget>[
                 Container(color: const Color(0xff515151)),
                 Stack(
-                    children: controller.leaves.reversed
-                        .map((leaf) => Positioned.fill(
-                            top: widget.padding.top,
-                            bottom: widget.padding.bottom,
-                            left: (isLTR ? _leafSize.width : 0) +
-                                widget.padding.left,
-                            right: (isLTR ? 0 : _leafSize.width) +
-                                widget.padding.right,
-                            child: AnimatedBuilder(
-                                animation: leaf.animation,
-                                builder: (context, animatedBuilderWidget) =>
-                                    _animationBuilder(
-                                        context, animatedBuilderWidget, leaf))))
-                        .toList())
+                    children: [
+                  ...controller.leaves.reversed
+                      .where((leaf) => leaf.animationController.value < 0.5),
+                  ...controller.leaves
+                      .where((leaf) => leaf.animationController.value >= 0.5)
+                ].map(leafMapper).toList())
               ],
             ),
           ),
@@ -232,7 +233,9 @@ class FlipBookState extends State<FlipBook>
             currentLeaf = controller.currentOrTurningLeaves.item2!;
           }
         }
-        controller.currentLeaf.animationController.value = pos;
+        setState(() {
+          controller.currentLeaf.animationController.value = pos;
+        });
         break;
       case Direction.backward:
         // reverse
@@ -248,8 +251,10 @@ class FlipBookState extends State<FlipBook>
             currentLeaf = controller.currentOrTurningLeaves.item1!;
           }
         }
-        controller.currentOrTurningLeaves.item1!.animationController.value =
-            pos;
+        setState(() {
+          controller.currentOrTurningLeaves.item1!.animationController.value =
+              pos;
+        });
     }
   }
 
