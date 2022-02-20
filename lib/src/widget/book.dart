@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, avoid_print
+// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
 import 'dart:math';
 
 import 'package:flip_book/src/controller/book_controller.dart';
@@ -206,7 +206,6 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     switch (_direction!) {
       case Direction.forward:
         final pos = _delta / _bgSize.width;
-        print(pos);
         // drag overflow
         if (pos > 1) {
           return;
@@ -223,7 +222,6 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
       case Direction.backward:
         // reverse
         final pos = 1 - (_delta.abs() / _bgSize.width);
-        print(pos);
         // drag overflow
         if (pos < 0) {
           return;

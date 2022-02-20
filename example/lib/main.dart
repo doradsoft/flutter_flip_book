@@ -1,8 +1,10 @@
 // ignore_for_file: avoid_function_literals_in_foreach_calls
 
 import 'package:flip_book/flip_book.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
   final flipBookToolbarItemsConfigEN = FlipBookToolbarItemsConfig(locale: FlipBookLocales.en);
   final flipBookToolbarItemsConfigHE =
       FlipBookToolbarItemsConfig(locale: FlipBookLocales.he, direction: TextDirection.rtl);
+  final hePageSemanticsDict = {4: "א", 5: "ב", 6: "ג"};
 
   MyApp({Key? key}) : super(key: key);
 
@@ -125,32 +128,51 @@ class MyApp extends StatelessWidget {
                     child: FlipBook.builder(
                       controller: buildFlipBookControllers.flipBookControllerHE,
                       direction: TextDirection.rtl,
-                      pageSemantics: PageSemantics(indexToSemanticName: ((pageIndex) {
-                        switch () {
-                          case :
-                            
-                            break;
-                          default:
+                      pageSemantics: PageSemantics(indexToSemanticName: (pageIndex) {
+                        return hePageSemanticsDict[pageIndex] ?? "";
+                      }, semanticNameToIndex: (String semanticPageName) {
+                        return hePageSemanticsDict.containsValue(semanticPageName)
+                            ? hePageSemanticsDict.entries.firstWhere((entry) => entry.value == semanticPageName).key
+                            : null;
+                      }, indexToTitle: (pageIndex) {
+                        final chapter = hePageSemanticsDict[pageIndex];
+                        if (chapter == null) {
+                          return "";
+                        } else {
+                          return "פרק $chapter";
                         }
                       }),
                       pageBuilder: (context, pageSize, pageIndex, semanticPageName) {
-                        return FutureBuilder<ByteData>(
-                          future: rootBundle.load(path.join("assets","pages_data","he","$semanticPageName.txt")),
-                          builder: (context, snapshot) {
-                            return Stack(
+                        Widget pageBody;
+
+                        if (semanticPageName == "") {
+                          pageBody = const SizedBox.shrink();
+                        } else {
+                          final textFilePath = path.join(kIsWeb ? "" : "assets", "pages_data", "he",
+                              "${hePageSemanticsDict.entries.firstWhere((entry) => entry.value == semanticPageName).key}.txt");
+                          pageBody = FutureBuilder<String>(
+                              future: rootBundle.loadString(textFilePath),
+                              builder: (_, snapshot) {
+                                if (kDebugMode) {
+                                  print("buildingPage");
+                                }
+                                return RichText(
+                                  text: TextSpan(text: snapshot.data ?? ""),
+                                );
+                              });
+                        }
+                        return Stack(
+                          children: [
+                            Column(
                               children: [
-                                Column(
-                                  children: [
-                                    Expanded(child: Container(color: Colors.white)),
-                                  ],
-                                ),
-                                Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [Text("")])
+                                Expanded(child: Container(color: Colors.white)),
                               ],
-                            );
-                          }
+                            ),
+                            Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [Expanded(child: pageBody)])
+                          ],
                         );
                       },
                     ),

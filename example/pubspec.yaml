@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  google_fonts: ^2.3.1
   cupertino_icons: ^1.0.2
   flip_book:
     path: ../
@@ -23,5 +23,5 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/pages_data/
+    - assets/pages_data/he/
   uses-material-design: true
