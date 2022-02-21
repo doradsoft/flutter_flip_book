@@ -58,7 +58,6 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
   }
 
   Widget leafBuilder(BuildContext context, Leaf leaf) {
-    print("dudu");
     final animationVal = leaf.animationController.value;
     final pageMaterial = Align(
       alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
