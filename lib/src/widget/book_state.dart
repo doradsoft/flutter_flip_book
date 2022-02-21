@@ -146,7 +146,7 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
   }
 
   void _onDragEnd(DragEndDetails details) async {
-    if (currentLeaf == null) {
+    if (currentLeaf == null || controller.animating) {
       _direction = null;
       _startingPos = 0;
       return;
@@ -154,14 +154,20 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     TickerFuture Function({double? from}) animate;
     final pps = details.velocity.pixelsPerSecond;
     final turningLeafAnimCtrl = currentLeaf!.animationController;
-    if (pps.dx.abs() > 500 && (isLTR ? pps.dx <= 0 : pps.dx > 0)) {
-      animate = turningLeafAnimCtrl.forward;
-    } else if (pps.dx.abs() > 500 && (isLTR ? pps.dx > 0 : pps.dx <= 0)) {
-      animate = turningLeafAnimCtrl.reverse;
-    } else if (turningLeafAnimCtrl.value > 0.5) {
-      animate = turningLeafAnimCtrl.forward;
-    } else {
-      animate = turningLeafAnimCtrl.reverse;
+    switch (_direction!) {
+      case Direction.forward:
+        if ((pps.dx.abs() > 500 || turningLeafAnimCtrl.value >= 0.5)) {
+          animate = turningLeafAnimCtrl.forward;
+        } else {
+          animate = turningLeafAnimCtrl.reverse;
+        }
+        break;
+      case Direction.backward:
+        if ((pps.dx.abs() > 500 || turningLeafAnimCtrl.value <= 0.5)) {
+          animate = turningLeafAnimCtrl.reverse;
+        } else {
+          animate = turningLeafAnimCtrl.forward;
+        }
     }
     controller.animating = true;
     _direction = null;

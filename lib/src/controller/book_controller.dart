@@ -13,13 +13,20 @@ class FlipBookController extends ChangeNotifier {
   bool animating = false;
   final int initialPage;
   late List<Leaf> leaves = [];
+  List<Leaf> get reversedLeaves {
+    return leaves.reversed.where((leaf) => leaf.animationController.value < 0.5).toList();
+  }
+
+  List<Leaf> get straightLeaves {
+    return leaves.where((leaf) => leaf.animationController.value >= 0.5).toList();
+  }
 
   /// books length.
   final int totalPages;
   bool isFullScreen = false;
-  
+
   /// [FlipBookController]'s constructor
-  /// 
+  ///
   /// The [initialPage] defines the page to show at the first time
   /// The [totalPages] defines the amount of pages in the book
   FlipBookController({this.initialPage = 0, required this.totalPages}) {
@@ -74,8 +81,6 @@ class FlipBookController extends ChangeNotifier {
   bool get isClosed => currentOrTurningLeaves.item1 == null;
   bool get isClosedInverted => currentLeaves.item2 == null;
 
-
-
   /// Animates current leaf forward
   Future<void> animateNext({duration = const Duration(milliseconds: 800), curve = Curves.easeInOutQuad}) async {
     if (animating || currentLeaves.item2 == null) return Future.value();
@@ -87,6 +92,7 @@ class FlipBookController extends ChangeNotifier {
     if (animating || currentLeaves.item1 == null) return Future.value();
     return await animateTo(currentLeaves.item1!.pages.first - 2, duration: duration, curve: curve);
   }
+
   /// Animates the position from its current page to the given page.
   ///
   /// The returned [Future] will complete when the animation ends, whether it

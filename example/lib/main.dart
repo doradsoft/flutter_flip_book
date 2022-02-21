@@ -143,6 +143,9 @@ class MyApp extends StatelessWidget {
                         }
                       }),
                       pageBuilder: (context, pageSize, pageIndex, semanticPageName) {
+                        if (kDebugMode) {
+                          print("buildingPage");
+                        }
                         Widget pageBody;
 
                         if (semanticPageName == "") {
@@ -153,9 +156,6 @@ class MyApp extends StatelessWidget {
                           pageBody = FutureBuilder<String>(
                               future: rootBundle.loadString(textFilePath),
                               builder: (_, snapshot) {
-                                if (kDebugMode) {
-                                  print("buildingPage");
-                                }
                                 return RichText(
                                   text: TextSpan(text: snapshot.data ?? ""),
                                 );
