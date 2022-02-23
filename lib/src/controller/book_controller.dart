@@ -13,13 +13,13 @@ class FlipBookController extends ChangeNotifier {
   bool animating = false;
   final int initialPage;
   late List<Leaf> leaves = [];
-  List<Leaf> get reversedLeaves {
-    return leaves.reversed.where((leaf) => leaf.animationController.value < 0.5).toList();
-  }
+  // List<Leaf> get reversedLeaves {
+  //   return leaves.reversed.where((leaf) => leaf.animationController.value < 0.5).toList();
+  // }
 
-  List<Leaf> get straightLeaves {
-    return leaves.where((leaf) => leaf.animationController.value >= 0.5).toList();
-  }
+  // List<Leaf> get straightLeaves {
+  //   return leaves.where((leaf) => leaf.animationController.value >= 0.5).toList();
+  // }
 
   /// books length.
   final int totalPages;

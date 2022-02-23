@@ -157,7 +157,7 @@ class MyApp extends StatelessWidget {
                               future: rootBundle.loadString(textFilePath),
                               builder: (_, snapshot) {
                                 return RichText(
-                                  text: TextSpan(text: snapshot.data ?? ""),
+                                  text: const TextSpan(text: ""),
                                 );
                               });
                         }

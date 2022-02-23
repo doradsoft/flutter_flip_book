@@ -1,11 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'package:flip_book/src/controller/book_controller.dart';
 import 'package:flip_book/src/widget/book.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_book/src/controller/leaf.dart';
-import 'package:flip_book/src/widgets_ext/multi_animation_builder.dart';
+import 'package:flip_book/src/widgets_ext/multi_animated_builder.dart';
 import 'dart:math';
 
 enum Direction { backward, forward }
+const fastDx = 500;
 
 class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
   Leaf? currentLeaf;
@@ -42,8 +45,8 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
               clipBehavior: Clip.none,
               children: <Widget>[
                 Container(color: const Color(0xff515151)),
-                MultiAnimatiedBuilder(
-                    animations: controller.leaves.map((leaf) => leaf.animationController),
+                MultiAnimatedBuilder(
+                    animations: controller.leaves.map((leaf) => leaf.animation),
                     builder: (_, __) => Stack(
                             children: [
                           ...controller.leaves.reversed.where((leaf) => leaf.animationController.value < 0.5),
@@ -60,19 +63,23 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
   Widget leafBuilder(BuildContext context, Leaf leaf) {
     final animationVal = leaf.animationController.value;
     final pageMaterial = Align(
-      alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
-      child: AspectRatio(
-          aspectRatio: 2 / 3,
-          child: SizedBox(
+        alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
+        child: AspectRatio(
+            aspectRatio: 2 / 3,
+            child: SizedBox(
               height: _leafSize.height,
               width: _leafSize.width,
-              child: animationVal < 0.5
-                  ? Transform(
-                      alignment: Alignment.center,
-                      transform: Matrix4.rotationY(pi),
-                      child: widget.pageDelegate.build(context, _leafSize, leaf.pages.first))
-                  : widget.pageDelegate.build(context, _leafSize, leaf.pages.last))),
-    );
+              child: Container(
+                  color: leaf.index == 0
+                      ? const Color(0xffaaffff)
+                      : leaf.index == 1
+                          ? const Color(0xffc1f0cf)
+                          : leaf.index == 2
+                              ? const Color(0xffd157bb)
+                              : leaf.index == 3
+                                  ? const Color(0xffd1c0db)
+                                  : const Color(0xffe1b02b)),
+            )));
     return Positioned.fill(
       top: widget.padding.top,
       bottom: widget.padding.bottom,
@@ -115,7 +122,7 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
       case Direction.forward:
         final pos = _delta / _bgSize.width;
         // drag overflow
-        if (pos > 1) {
+        if (pos > 1 || _delta < 0) {
           return;
         }
         if (currentLeaf == null) {
@@ -131,7 +138,7 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
         // reverse
         final pos = 1 - (_delta.abs() / _bgSize.width);
         // drag overflow
-        if (pos < 0) {
+        if (pos < 0 || _delta > 0) {
           return;
         }
         if (currentLeaf == null) {
@@ -156,14 +163,14 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     final turningLeafAnimCtrl = currentLeaf!.animationController;
     switch (_direction!) {
       case Direction.forward:
-        if ((pps.dx.abs() > 500 || turningLeafAnimCtrl.value >= 0.5)) {
+        if ((pps.dx > fastDx || turningLeafAnimCtrl.value >= 0.5)) {
           animate = turningLeafAnimCtrl.forward;
         } else {
           animate = turningLeafAnimCtrl.reverse;
         }
         break;
       case Direction.backward:
-        if ((pps.dx.abs() > 500 || turningLeafAnimCtrl.value <= 0.5)) {
+        if ((pps.dx < -fastDx || turningLeafAnimCtrl.value <= 0.5)) {
           animate = turningLeafAnimCtrl.reverse;
         } else {
           animate = turningLeafAnimCtrl.forward;
