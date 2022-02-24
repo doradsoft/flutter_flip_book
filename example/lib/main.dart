@@ -97,7 +97,9 @@ class MyApp extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: !buildFlipBookControllers.flipBookControllerEN.isFullScreen,
+            visible: !buildFlipBookControllers.flipBookControllerEN.isFullScreen ||
+                (buildFlipBookControllers.flipBookControllerHE.isFullScreen &&
+                    buildFlipBookControllers.flipBookControllerEN.isFullScreen),
             // visible: true,
             child: Expanded(
               child: Directionality(
@@ -156,8 +158,12 @@ class MyApp extends StatelessWidget {
                           pageBody = FutureBuilder<String>(
                               future: rootBundle.loadString(textFilePath),
                               builder: (_, snapshot) {
-                                return RichText(
-                                  text: const TextSpan(text: ""),
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    snapshot.data ?? "",
+                                    textAlign: TextAlign.justify,
+                                  ),
                                 );
                               });
                         }

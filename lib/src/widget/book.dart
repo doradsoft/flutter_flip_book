@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
 class FlipBook extends StatefulWidget {
-  static const _defaultAspectRatio = 3 / 2;
+  static const _defaultAspectRatio = 2 / 3;
   static const _defaultAxis = Axis.horizontal;
   static const _defaultBufferSize = 2;
   static const _defaultPadding = EdgeInsets.all(10);

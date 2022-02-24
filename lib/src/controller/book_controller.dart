@@ -1,3 +1,4 @@
+import 'dart:async';
 // ignore: avoid_web_libraries_in_flutter
 // import 'dart:html'; // during development only, for release, use:
 import 'package:flip_book/src/dummy_dart_html.dart' if (dart.library.html) 'dart:html';
@@ -9,17 +10,13 @@ import 'package:tuple/tuple.dart';
 
 /// [FlipBook]'s controller
 class FlipBookController extends ChangeNotifier {
+  static final _instances = [];
+  static FlipBookController? _fullScreenInitiative;
+
   /// The page to show when first creating the [PageView].
   bool animating = false;
   final int initialPage;
   late List<Leaf> leaves = [];
-  // List<Leaf> get reversedLeaves {
-  //   return leaves.reversed.where((leaf) => leaf.animationController.value < 0.5).toList();
-  // }
-
-  // List<Leaf> get straightLeaves {
-  //   return leaves.where((leaf) => leaf.animationController.value >= 0.5).toList();
-  // }
 
   /// books length.
   final int totalPages;
@@ -31,15 +28,15 @@ class FlipBookController extends ChangeNotifier {
   /// The [totalPages] defines the amount of pages in the book
   FlipBookController({this.initialPage = 0, required this.totalPages}) {
     if (kIsWeb) {
-      document.documentElement?.onFullscreenChange.listen((event) {
-        if (document.fullscreenElement == null) {
-          isFullScreen = false;
-          notifyListeners();
-        }
-      });
+      document.documentElement?.onFullscreenChange.listen((event) => _updateIsFullScreen());
+      // fallback
+      if (_instances.isEmpty) {
+        Timer.periodic(const Duration(milliseconds: 300), (timer) => _updateIsFullScreen());
+      }
     } else {
       // todo: support more platforms.
     }
+    _instances.add(this);
   }
 
   Tuple2<Leaf?, Leaf?> get currentLeaves {
@@ -143,7 +140,20 @@ class FlipBookController extends ChangeNotifier {
     } else {
       // todo: support more platforms.
     }
-    isFullScreen = !isFullScreen;
-    notifyListeners();
+    _fullScreenInitiative = this;
+  }
+
+  static _updateIsFullScreen() {
+    final instancesToIterate = _fullScreenInitiative == null ? _instances : [_fullScreenInitiative];
+    for (var instance in instancesToIterate) {
+      if ((document.fullscreenElement == null && instance.isFullScreen) ||
+          (document.fullscreenElement != null && !instance.isFullScreen)) {
+        instance.isFullScreen = !instance.isFullScreen;
+        instance.notifyListeners();
+      }
+    }
+    if (_fullScreenInitiative != null) {
+      _fullScreenInitiative = null;
+    }
   }
 }
