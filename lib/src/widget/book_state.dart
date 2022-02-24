@@ -67,19 +67,24 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
         child: AspectRatio(
             aspectRatio: 2 / 3,
             child: SizedBox(
-              height: _leafSize.height,
-              width: _leafSize.width,
-              child: Container(
-                  color: leaf.index == 0
-                      ? const Color(0xffaaffff)
-                      : leaf.index == 1
-                          ? const Color(0xffc1f0cf)
-                          : leaf.index == 2
-                              ? const Color(0xffd157bb)
-                              : leaf.index == 3
-                                  ? const Color(0xffd1c0db)
-                                  : const Color(0xffe1b02b)),
-            )));
+                height: _leafSize.height,
+                width: _leafSize.width,
+                child: Container(
+                    color: leaf.index == 0
+                        ? const Color(0xffaaffff)
+                        : leaf.index == 1
+                            ? const Color(0xffc1f0cf)
+                            : leaf.index == 2
+                                ? const Color(0xffd157bb)
+                                : leaf.index == 3
+                                    ? const Color(0xffd1c0db)
+                                    : const Color(0xffe1b02b),
+                    child: animationVal < 0.5
+                        ? Transform(
+                            alignment: Alignment.center,
+                            transform: Matrix4.identity()..rotateY(-pi),
+                            child: Image.network('https://docs.flutter.dev/assets/images/dash/dash-fainting.gif'))
+                        : Image.network('https://docs.flutter.dev/assets/images/dash/dash-fainting.gif')))));
     return Positioned.fill(
       top: widget.padding.top,
       bottom: widget.padding.bottom,
