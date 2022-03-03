@@ -49,12 +49,20 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
                 animations: controller.leaves.map((leaf) => leaf.animationController),
                 builder: (_, __) => Stack(clipBehavior: Clip.none, fit: StackFit.expand, children: [
                       Container(color: const Color(0xff515151)),
-                      ...controller.leaves.reversed
-                          .where((leaf) => leaf.animationController.value < 0.5)
-                          .map((leaf) => leafBuilder(context, leaf)),
-                      ...controller.leaves
-                          .where((leaf) => leaf.animationController.value >= 0.5)
-                          .map((leaf) => leafBuilder(context, leaf))
+                      Stack(
+                        children: [
+                          ...controller.leaves
+                              .where((leaf) => leaf.animationController.value > 0.5)
+                              .map((leaf) => leafBuilder(context, leaf))
+                        ],
+                      ),
+                      Stack(
+                        children: [
+                          ...controller.leaves.reversed
+                              .where((leaf) => leaf.animationController.value < 0.5)
+                              .map((leaf) => leafBuilder(context, leaf)),
+                        ],
+                      ),
                     ])),
           ),
         ),

@@ -39,6 +39,8 @@ class FlipBookController extends ChangeNotifier {
     _instances.add(this);
   }
 
+  Leaf get currentLeaf => currentLeaves.toList().lastWhere((leaf) => leaf != null);
+
   Tuple2<Leaf?, Leaf?> get currentLeaves {
     int secondLeafIndex = -1;
     for (var i = leaves.length - 1; i >= 0; i--) {
@@ -48,7 +50,6 @@ class FlipBookController extends ChangeNotifier {
         break;
       }
     }
-
     return secondLeafIndex == -1
         ? Tuple2(null, leaves[0])
         : secondLeafIndex == leaves.length
@@ -65,15 +66,12 @@ class FlipBookController extends ChangeNotifier {
         break;
       }
     }
-
     return secondLeafIndex == -1
         ? Tuple2(null, leaves[0])
         : secondLeafIndex == leaves.length
             ? Tuple2(leaves[secondLeafIndex - 1], null)
             : Tuple2(leaves[secondLeafIndex - 1], leaves[secondLeafIndex]);
   }
-
-  Leaf get currentLeaf => currentLeaves.toList().lastWhere((leaf) => leaf != null);
 
   bool get isClosed => currentOrTurningLeaves.item1 == null;
   bool get isClosedInverted => currentLeaves.item2 == null;

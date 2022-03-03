@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="stable, performance issues, splitted widget and state">
-      <change afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/controller/book_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/controller/book_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/widget/book_state.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book_state.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,9 +36,8 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
-    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/example/assets/pages_data/he" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../dudu/flutter_web_bug" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -50,7 +50,11 @@
       <recent name="C:\Users\Dorad\source\tanah-app-web\flip-book\flip-book\lib\src\widget" />
     </key>
   </component>
-  <component name="RunManager" selected="Flutter.main.dart (profile)">
+  <component name="RunManager" selected="Flutter.main.dart (Anrdoid)">
+    <configuration name="main.dart (Anrdoid)" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="filePath" value="$PROJECT_DIR$/example/lib/main.dart" />
+      <method v="2" />
+    </configuration>
     <configuration name="main.dart (profile)" type="FlutterRunConfigurationType" factoryName="Flutter">
       <option name="additionalArgs" value="--profile --web-renderer html" />
       <option name="filePath" value="$PROJECT_DIR$/example/lib/main.dart" />
@@ -64,6 +68,7 @@
     <list>
       <item itemvalue="Flutter.main.dart" />
       <item itemvalue="Flutter.main.dart (profile)" />
+      <item itemvalue="Flutter.main.dart (Anrdoid)" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
