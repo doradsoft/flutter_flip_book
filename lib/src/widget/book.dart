@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
 
+import 'package:flip_book/src/aspect_ratio_fraction.dart';
 import 'package:flip_book/src/controller/book_controller.dart';
 import 'package:flip_book/src/widget/book_state.dart';
 import 'package:flip_book/src/widget/page_builder.dart';
@@ -10,7 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 
 class FlipBook extends StatefulWidget {
-  static const _defaultAspectRatio = 2 / 3;
+  static const _defaultLeafAspectRatio = AspectRatioFraction(2, 3);
+  static const _defaultCoverAspectRatio = AspectRatioFraction(2.15, 3.15);
   static const _defaultAxis = Axis.horizontal;
   static const _defaultBufferSize = 2;
   static const _defaultPadding = EdgeInsets.all(10);
@@ -18,6 +20,13 @@ class FlipBook extends StatefulWidget {
   static Locale localeInit(Locale? locale) => locale ?? Locale(intl.Intl.getCurrentLocale());
   static TextDirection directionInit(TextDirection? direction, Locale? locale) =>
       direction ?? (intl.Bidi.isRtlLanguage(localeInit(locale).languageCode) ? TextDirection.rtl : TextDirection.ltr);
+  static bool aspectRatioValidation(AspectRatioFraction coverAspectRatio, AspectRatioFraction leafAspectRatio) =>
+      coverAspectRatio.heightFactor != 0 &&
+      coverAspectRatio.widthFactor != 0 &&
+      leafAspectRatio.heightFactor != 0 &&
+      leafAspectRatio.widthFactor != 0 &&
+      coverAspectRatio.widthFactor >= leafAspectRatio.widthFactor &&
+      coverAspectRatio.heightFactor >= leafAspectRatio.heightFactor;
   static bool totalPagesValidation(int? totalPages) => totalPages != null && totalPages >= 4 && totalPages % 2 == 0;
   final bool addAutomaticKeepAlives;
 
@@ -25,9 +34,10 @@ class FlipBook extends StatefulWidget {
   ///
   /// Defaults to [Axis.horizontal].
   final Axis axis;
-  final double aspectRatio;
   final FlipBookController controller;
+  final AspectRatioFraction coverAspectRatio;
   final TextDirection direction;
+  final AspectRatioFraction leafAspectRatio;
   final Locale locale;
 
   /// Called whenever the page in the center of the viewport changes.
@@ -47,17 +57,19 @@ class FlipBook extends StatefulWidget {
   FlipBook({
     Key? key,
     this.addAutomaticKeepAlives = false,
-    this.aspectRatio = _defaultAspectRatio,
     this.axis = _defaultAxis,
     this.bufferSize = _defaultBufferSize,
-    TextDirection? direction,
     FlipBookController? controller,
+    this.coverAspectRatio = _defaultCoverAspectRatio,
+    TextDirection? direction,
+    this.leafAspectRatio = _defaultLeafAspectRatio,
     Locale? locale,
     this.onPageChanged,
     this.padding = _defaultPadding,
     this.pageSemantics,
     List<Widget> pages = const <Widget>[],
-  })  : controller = controller ?? FlipBookController(totalPages: pages.length),
+  })  : assert(aspectRatioValidation(coverAspectRatio, leafAspectRatio)),
+        controller = controller ?? FlipBookController(totalPages: pages.length),
         locale = localeInit(locale),
         direction = directionInit(direction, locale),
         pageDelegate = PageListDelegate(
@@ -68,18 +80,20 @@ class FlipBook extends StatefulWidget {
   FlipBook.builder({
     Key? key,
     this.addAutomaticKeepAlives = false,
-    this.aspectRatio = _defaultAspectRatio,
     this.axis = _defaultAxis,
     this.bufferSize = _defaultBufferSize,
-    TextDirection? direction,
     FlipBookController? controller,
+    this.coverAspectRatio = _defaultCoverAspectRatio,
+    TextDirection? direction,
+    this.leafAspectRatio = _defaultLeafAspectRatio,
     Locale? locale,
     this.onPageChanged,
-    required PageBuilder pageBuilder,
     this.padding = _defaultPadding,
+    required PageBuilder pageBuilder,
     this.pageSemantics,
     int? totalPages,
   })  : assert(totalPagesValidation(controller?.totalPages) || totalPagesValidation(totalPages)),
+        assert(aspectRatioValidation(coverAspectRatio, leafAspectRatio)),
         controller = controller ?? FlipBookController(totalPages: totalPages!),
         locale = localeInit(locale),
         direction = directionInit(direction, locale),

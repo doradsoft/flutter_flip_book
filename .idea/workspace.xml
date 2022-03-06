@@ -4,11 +4,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="stable, performance issues, splitted widget and state">
+    <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="flickering fix">
+      <change afterPath="$PROJECT_DIR$/lib/src/aspect_ratio_fraction.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/controller/book_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/controller/book_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/book.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/widget/book_state.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book_state.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_delegate.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +29,10 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../../../../flutter/packages/flutter/lib/src/widgets/basic.dart" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../../../../../flutter/bin/cache/pkg/sky_engine/lib/ui/painting.dart" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectId" id="25FO1o0z7PEa9KFOZu0RzhUyHgP" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -36,6 +43,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="cidr.known.project.marker" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../dudu/flutter_web_bug" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
@@ -66,9 +74,9 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Flutter.main.dart" />
-      <item itemvalue="Flutter.main.dart (profile)" />
       <item itemvalue="Flutter.main.dart (Anrdoid)" />
+      <item itemvalue="Flutter.main.dart (profile)" />
+      <item itemvalue="Flutter.main.dart" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -87,7 +95,14 @@
       <option name="project" value="LOCAL" />
       <updated>1645473763546</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="flickering fix">
+      <created>1646286334705</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1646286334705</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -104,6 +119,14 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="stable, performance issues, splitted widget and state" />
-    <option name="LAST_COMMIT_MESSAGE" value="stable, performance issues, splitted widget and state" />
+    <MESSAGE value="flickering fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="flickering fix" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="FlutterRunConfigurationType">
+        <watch expression="widget.coverAspectRatio.value" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

@@ -32,9 +32,9 @@ class PageBuilderDelegate extends PageDelegate {
 
   @override
   @pragma('vm:notify-debugger-on-exception')
-  Widget? build(BuildContext context, Size pageSize, int index) {
-    if (index < 0 || index >= pageCount) return null;
-    Widget? page;
+  Widget build(BuildContext context, Size pageSize, int index) {
+    if (index < 0 || index >= pageCount) throw PageDelegate.outOfBoundaryEx;
+    Widget page;
     try {
       if (cachedPages.containsKey(index)) {
         page = cachedPages[index]!;

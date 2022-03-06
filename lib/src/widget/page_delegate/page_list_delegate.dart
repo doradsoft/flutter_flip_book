@@ -52,11 +52,9 @@ class PageListDelegate extends PageDelegate {
   PageListDelegate(this.pages, {this.addAutomaticKeepAlives = true}) : super(pages.length);
 
   @override
-  Widget? build(BuildContext context, Size pageSize, int index) {
-    if (index < 0 || index >= pages.length) {
-      return null;
-    }
-    Widget? page = pages[index];
+  Widget build(BuildContext context, Size pageSize, int index) {
+    if (index < 0 || index >= pageCount) throw PageDelegate.outOfBoundaryEx;
+    Widget page = pages[index];
     final Key? key = page.key != null ? SaltedValueKey(page.key!) : null;
     assert(
       // adopted from silver.dart

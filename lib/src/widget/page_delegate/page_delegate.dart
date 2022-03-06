@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 abstract class PageDelegate {
+  static final outOfBoundaryEx = Exception("Out of book boundary");
+
   /// The total number of children this delegate can provide.
   final int pageCount;
 
@@ -19,7 +21,7 @@ abstract class PageDelegate {
   /// The values returned by this method are cached. To indicate that the
   /// widgets have changed, a new delegate must be provided, and the new
   /// delegate's [shouldRebuild] method must return true.
-  Widget? build(BuildContext context, Size pageSize, int index);
+  Widget build(BuildContext context, Size pageSize, int index);
 
   /// Called at the end of layout to indicate that layout is now complete.
   ///
