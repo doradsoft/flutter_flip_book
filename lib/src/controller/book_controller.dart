@@ -121,7 +121,8 @@ class FlipBookController extends ChangeNotifier {
 
   void setVsync(TickerProvider vsync) {
     if (leaves.isEmpty) {
-      leaves = List<Leaf>.generate((totalPages / 2).ceil(), (i) => Leaf(index: i, vsync: vsync));
+      final length = (totalPages / 2).ceil();
+      leaves = List<Leaf>.generate(length, (i) => Leaf(index: i, indexOf: length, vsync: vsync));
     } else {
       // leaves.forEach((leaf) {leaf.vs});
     }

@@ -4,11 +4,15 @@ class Leaf extends ChangeNotifier {
   late final AnimationController animationController;
   late final CurvedAnimation animation;
   final int index;
+  final int indexOf;
   late final List<int> pages;
+  bool get isCover => isFirst || isLast;
+  bool get isFirst => index == 0;
+  bool get isLast => index == indexOf - 1;
   bool get isTurned => animationController.value == 1;
   bool get isTurning => animationController.value != 0;
 
-  Leaf({required this.index, required TickerProvider vsync}) : super() {
+  Leaf({required this.index, required this.indexOf, required TickerProvider vsync}) : super() {
     animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 800),

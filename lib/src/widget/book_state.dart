@@ -74,9 +74,8 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
   }
 
   Widget leafBuilder(BuildContext context, Leaf leaf) {
-    if ((leaf.index - controller.currentLeaf.index).abs() > widget.bufferSize ||
-        (widget.coverAspectRatio.value == widget.leafAspectRatio.value &&
-            (leaf == controller.leaves.first || leaf == controller.leaves.last))) return const SizedBox.shrink();
+    if ((!leaf.isCover && (leaf.index - controller.currentLeaf.index).abs() > widget.bufferSize) ||
+        (leaf.isCover && widget.coverAspectRatio.value == widget.leafAspectRatio.value)) return const SizedBox.shrink();
     final animationVal = leaf.animationController.value;
     final firstPageTransformed = Transform(
         alignment: Alignment.center,
@@ -87,18 +86,18 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     final pageMaterial = Align(
         alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
         child: SizedBox(
-            height: _leafSize.height,
-            width: _leafSize.width,
+            height: leaf.isCover ? _coverSize.height : _leafSize.height,
+            width: leaf.isCover ? _coverSize.width : _leafSize.width,
             child: Stack(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 children: animationVal < 0.5 ? pages.reversed.toList() : pages)));
     return Positioned.fill(
       top: widget.padding.top,
       bottom: widget.padding.bottom,
-      left: (isLTR ? _leafSize.width : 0) + widget.padding.left,
-      right: (isLTR ? 0 : _leafSize.width) + widget.padding.right,
+      left: (isLTR ? _coverSize.width : 0) + widget.padding.left,
+      right: (isLTR ? 0 : _coverSize.width) + widget.padding.right,
       child: Transform.translate(
-        offset: Offset(_leafSize.width, 0),
+        offset: Offset(_coverSize.width, 0),
         child: Transform(
           transform: Matrix4.identity()..rotateY(isLTR ? -pi : pi),
           child: Transform(

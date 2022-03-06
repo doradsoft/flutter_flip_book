@@ -5,13 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="flickering fix">
-      <change afterPath="$PROJECT_DIR$/lib/src/aspect_ratio_fraction.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/book.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/en_page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/en_page_builder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/controller/book_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/controller/book_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/controller/leaf.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/controller/leaf.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/widget/book_state.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book_state.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_delegate.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +122,11 @@
     <option name="LAST_COMMIT_MESSAGE" value="flickering fix" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint suspend="THREAD" type="dart-exception" />
+      </default-breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="FlutterRunConfigurationType">
         <watch expression="widget.coverAspectRatio.value" />
