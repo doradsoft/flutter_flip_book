@@ -13,75 +13,21 @@ and the Flutter guide for
 
 Flutter flip book widget
 
+
+
+https://user-images.githubusercontent.com/5598420/156990150-a7dcc561-1708-4db0-83b4-eac81736f4ad.mp4
+
+
+
 ## Features
 
 * RTL
 * Aspect Ratio
 * Page Builder
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-```dart
-import 'package:flip_book/flip_book.dart';
-import 'package:flutter/material.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  final flipBookController = FlipBookController(totalPages: 4);
-  final FlipBookToolbarItemsConfig flipBookToolbarItemsConfig =
-      FlipBookToolbarItemsConfig();
-  MyApp({Key? key}) : super(key: key);
-  
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: Row(mainAxisSize: MainAxisSize.min, children: [
-            FlipBookToolbarItemPrev(
-                    flipBookController, flipBookToolbarItemsConfig)
-                .child,
-            FlipBookToolbarItemNext(
-                    flipBookController, flipBookToolbarItemsConfig)
-                .child,
-            FlipBookToolbarItemFullscreen(
-                    flipBookController, flipBookToolbarItemsConfig)
-                .child,
-          ]),
-        ),
-        body: FlipBook.builder(
-          controller: flipBookController,
-          itemBuilder: (context, index) {
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Text("page ${index + 1}")]);
-          },
-          // padding: const EdgeInsets.symmetric(vertical: 10),
-          totalPages: 4,
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-```
-
 ## Additional information
 
-The package is still in not usable. After I stabilize it, you can open issues.
+The package is in under construction.
 
 ## Development
 
@@ -94,7 +40,7 @@ Each locale translations are defined in `./lib/l10n/intl_<locale>.arb`
 2. Edit `./lib/src/intl/locales.dart`.
 
 
-### Adding a new Internationalized text
+#### Adding a new Internationalized text
 1. Copy text getter from `./lib/generated/l10n.dart` into `./lib/src/intl/text.dart`
 2. Replace getter signature with a `String <getter_name> (Locale locale)` function.
 3. Append `locale: locale.toString()` parameter to Intl.message call.
