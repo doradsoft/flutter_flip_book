@@ -12,7 +12,11 @@ class Leaf extends ChangeNotifier {
   bool get isTurned => animationController.value == 1;
   bool get isTurning => animationController.value != 0;
 
-  Leaf({required this.index, required this.indexOf, required TickerProvider vsync}) : super() {
+  Leaf(
+      {required this.index,
+      required this.indexOf,
+      required TickerProvider vsync})
+      : super() {
     animationController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 800),

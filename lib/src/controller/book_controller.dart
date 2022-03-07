@@ -1,7 +1,8 @@
 import 'dart:async';
 // ignore: avoid_web_libraries_in_flutter
 // import 'dart:html'; // during development only, for release, use:
-import 'package:flip_book/src/dummy_dart_html.dart' if (dart.library.html) 'dart:html';
+import 'package:flip_book/src/dummy_dart_html.dart'
+    if (dart.library.html) 'dart:html';
 
 import 'package:flip_book/src/controller/leaf.dart';
 import 'package:flutter/foundation.dart';
@@ -28,10 +29,12 @@ class FlipBookController extends ChangeNotifier {
   /// The [totalPages] defines the amount of pages in the book
   FlipBookController({this.initialPage = 0, required this.totalPages}) {
     if (kIsWeb) {
-      document.documentElement?.onFullscreenChange.listen((event) => _updateIsFullScreen());
+      document.documentElement?.onFullscreenChange
+          .listen((event) => _updateIsFullScreen());
       // fallback
       if (_instances.isEmpty) {
-        Timer.periodic(const Duration(milliseconds: 300), (timer) => _updateIsFullScreen());
+        Timer.periodic(const Duration(milliseconds: 300),
+            (timer) => _updateIsFullScreen());
       }
     } else {
       // todo: support more platforms.
@@ -39,7 +42,8 @@ class FlipBookController extends ChangeNotifier {
     _instances.add(this);
   }
 
-  Leaf get currentLeaf => currentLeaves.toList().lastWhere((leaf) => leaf != null);
+  Leaf get currentLeaf =>
+      currentLeaves.toList().lastWhere((leaf) => leaf != null);
 
   Tuple2<Leaf?, Leaf?> get currentLeaves {
     int secondLeafIndex = -1;
@@ -77,15 +81,21 @@ class FlipBookController extends ChangeNotifier {
   bool get isClosedInverted => currentLeaves.item2 == null;
 
   /// Animates current leaf forward
-  Future<void> animateNext({duration = const Duration(milliseconds: 800), curve = Curves.easeInOutQuad}) async {
+  Future<void> animateNext(
+      {duration = const Duration(milliseconds: 800),
+      curve = Curves.easeInOutQuad}) async {
     if (animating || currentLeaves.item2 == null) return Future.value();
-    return await animateTo(currentLeaves.item2!.pages.last + 1, duration: duration, curve: curve);
+    return await animateTo(currentLeaves.item2!.pages.last + 1,
+        duration: duration, curve: curve);
   }
 
   /// Animates current leaf backward
-  Future<void> animatePrev({duration = const Duration(milliseconds: 800), curve = Curves.easeInOutQuad}) async {
+  Future<void> animatePrev(
+      {duration = const Duration(milliseconds: 800),
+      curve = Curves.easeInOutQuad}) async {
     if (animating || currentLeaves.item1 == null) return Future.value();
-    return await animateTo(currentLeaves.item1!.pages.first - 2, duration: duration, curve: curve);
+    return await animateTo(currentLeaves.item1!.pages.first - 2,
+        duration: duration, curve: curve);
   }
 
   /// Animates the position from its current page to the given page.
@@ -105,7 +115,8 @@ class FlipBookController extends ChangeNotifier {
   }) async {
     animating = true;
     await Future.wait<void>(<Future<void>>[
-      ...leaves.map((leaf) => leaf.animateTo(page, duration: duration, curve: curve))
+      ...leaves
+          .map((leaf) => leaf.animateTo(page, duration: duration, curve: curve))
       // for (int i = 0; i < _positions.length; i += 1)
       // _positions[i].animateTo(offset, duration: duration, curve: curve),
     ]);
@@ -122,7 +133,8 @@ class FlipBookController extends ChangeNotifier {
   void setVsync(TickerProvider vsync) {
     if (leaves.isEmpty) {
       final length = (totalPages / 2).ceil();
-      leaves = List<Leaf>.generate(length, (i) => Leaf(index: i, indexOf: length, vsync: vsync));
+      leaves = List<Leaf>.generate(
+          length, (i) => Leaf(index: i, indexOf: length, vsync: vsync));
     } else {
       // leaves.forEach((leaf) {leaf.vs});
     }
@@ -143,7 +155,8 @@ class FlipBookController extends ChangeNotifier {
   }
 
   static _updateIsFullScreen() {
-    final instancesToIterate = _fullScreenInitiative == null ? _instances : [_fullScreenInitiative];
+    final instancesToIterate =
+        _fullScreenInitiative == null ? _instances : [_fullScreenInitiative];
     for (var instance in instancesToIterate) {
       if ((document.fullscreenElement == null && instance.isFullScreen) ||
           (document.fullscreenElement != null && !instance.isFullScreen)) {
