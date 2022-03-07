@@ -6,11 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="flickering fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/assets/pages_data/en/assets/sql-commnad.png" beforeDir="false" afterPath="$PROJECT_DIR$/example/assets/pages_data/en/assets/sql-command.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/assets/pages_data/en/assets/theme-dark.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/assets/pages_data/en/assets/theme-light.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/assets/pages_data/en/content/012-sql-commnad-categories.md" beforeDir="false" afterPath="$PROJECT_DIR$/example/assets/pages_data/en/content/012-sql-command-categories.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/en_page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/en_page_builder.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,13 +118,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="Dart">
-          <url>file://$PROJECT_DIR$/../../../../../../flutter/packages/flutter/lib/src/painting/image_provider.dart</url>
-          <line>889</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint suspend="THREAD" type="dart-exception" />
       </default-breakpoints>
