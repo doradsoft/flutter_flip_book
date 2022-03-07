@@ -13,9 +13,7 @@ and the Flutter guide for
 
 Flutter flip book widget
 
-
-
-https://user-images.githubusercontent.com/5598420/156990150-a7dcc561-1708-4db0-83b4-eac81736f4ad.mp4
+![Demo](https://user-images.githubusercontent.com/5598420/156991835-2f001180-11c5-4ca5-9a08-6fd95ae1d7b8.gif)
 
 
 
