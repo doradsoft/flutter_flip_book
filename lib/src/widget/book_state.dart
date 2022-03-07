@@ -10,7 +10,8 @@ import 'dart:math';
 enum Direction { backward, forward }
 const fastDx = 500;
 
-class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
+class FlipBookState extends State<FlipBook>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin<FlipBook> {
   Leaf? currentLeaf;
   Size _bgSize = const Size(0, 0);
   Direction? _direction;
@@ -34,13 +35,20 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     final controller = widget.controller;
     return LayoutBuilder(builder: (context, constraints) {
       _bgSize = Size(constraints.maxWidth, constraints.maxHeight);
-      final maxCoverSize =
-          Size((_bgSize.width - widget.padding.horizontal) / 2, _bgSize.height - widget.padding.vertical);
+      final maxCoverSize = Size((_bgSize.width - widget.padding.horizontal) / 2,
+          _bgSize.height - widget.padding.vertical);
       _coverSize = maxCoverSize.aspectRatio > widget.coverAspectRatio.value
-          ? Size(maxCoverSize.height * widget.coverAspectRatio.value, maxCoverSize.height)
-          : Size(maxCoverSize.width, maxCoverSize.width / widget.coverAspectRatio.value);
-      _leafSize = Size(_coverSize.width * widget.leafAspectRatio.widthFactor / widget.coverAspectRatio.widthFactor,
-          _coverSize.height * widget.leafAspectRatio.heightFactor / widget.coverAspectRatio.heightFactor);
+          ? Size(maxCoverSize.height * widget.coverAspectRatio.value,
+              maxCoverSize.height)
+          : Size(maxCoverSize.width,
+              maxCoverSize.width / widget.coverAspectRatio.value);
+      _leafSize = Size(
+          _coverSize.width *
+              widget.leafAspectRatio.widthFactor /
+              widget.coverAspectRatio.widthFactor,
+          _coverSize.height *
+              widget.leafAspectRatio.heightFactor /
+              widget.coverAspectRatio.heightFactor);
       return Directionality(
         textDirection: widget.direction,
         child: Material(
@@ -49,24 +57,30 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
             onHorizontalDragUpdate: _onDragUpdate,
             onHorizontalDragEnd: _onDragEnd,
             child: MultiAnimatedBuilder(
-                animations: controller.leaves.map((leaf) => leaf.animationController),
-                builder: (_, __) => Stack(clipBehavior: Clip.none, fit: StackFit.expand, children: [
-                      Container(color: const Color(0xff515151)),
-                      Stack(
+                animations:
+                    controller.leaves.map((leaf) => leaf.animationController),
+                builder: (_, __) => Stack(
+                        clipBehavior: Clip.none,
+                        fit: StackFit.expand,
                         children: [
-                          ...controller.leaves
-                              .where((leaf) => leaf.animationController.value > 0.5)
-                              .map((leaf) => leafBuilder(context, leaf))
-                        ],
-                      ),
-                      Stack(
-                        children: [
-                          ...controller.leaves.reversed
-                              .where((leaf) => leaf.animationController.value < 0.5)
-                              .map((leaf) => leafBuilder(context, leaf)),
-                        ],
-                      ),
-                    ])),
+                          Container(color: const Color(0xff515151)),
+                          Stack(
+                            children: [
+                              ...controller.leaves
+                                  .where((leaf) =>
+                                      leaf.animationController.value > 0.5)
+                                  .map((leaf) => leafBuilder(context, leaf))
+                            ],
+                          ),
+                          Stack(
+                            children: [
+                              ...controller.leaves.reversed
+                                  .where((leaf) =>
+                                      leaf.animationController.value < 0.5)
+                                  .map((leaf) => leafBuilder(context, leaf)),
+                            ],
+                          ),
+                        ])),
           ),
         ),
       );
@@ -74,14 +88,19 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
   }
 
   Widget leafBuilder(BuildContext context, Leaf leaf) {
-    if ((!leaf.isCover && (leaf.index - controller.currentLeaf.index).abs() > widget.bufferSize) ||
-        (leaf.isCover && widget.coverAspectRatio.value == widget.leafAspectRatio.value)) return const SizedBox.shrink();
+    if ((!leaf.isCover &&
+            (leaf.index - controller.currentLeaf.index).abs() >
+                widget.bufferSize) ||
+        (leaf.isCover &&
+            widget.coverAspectRatio.value == widget.leafAspectRatio.value))
+      return const SizedBox.shrink();
     final animationVal = leaf.animationController.value;
     final firstPageTransformed = Transform(
         alignment: Alignment.center,
         transform: Matrix4.rotationY(-pi),
         child: widget.pageDelegate.build(context, _leafSize, leaf.pages.first));
-    final lastPage = widget.pageDelegate.build(context, _leafSize, leaf.pages.last);
+    final lastPage =
+        widget.pageDelegate.build(context, _leafSize, leaf.pages.last);
     List<Widget> pages = [firstPageTransformed, lastPage];
     final pageMaterial = Align(
         alignment: isLTR ? Alignment.centerRight : Alignment.centerLeft,
@@ -90,7 +109,8 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
             width: leaf.isCover ? _coverSize.width : _leafSize.width,
             child: Stack(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                children: animationVal < 0.5 ? pages.reversed.toList() : pages)));
+                children:
+                    animationVal < 0.5 ? pages.reversed.toList() : pages)));
     return Positioned.fill(
       top: widget.padding.top,
       bottom: widget.padding.bottom,
@@ -125,10 +145,13 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     if (controller.animating) {
       return;
     }
-    _delta = isLTR ? _startingPos - details.globalPosition.dx : details.globalPosition.dx - _startingPos;
+    _delta = isLTR
+        ? _startingPos - details.globalPosition.dx
+        : details.globalPosition.dx - _startingPos;
     if (_delta.abs() > _bgSize.width) return;
     if (_delta == 0) return;
-    _direction = _direction ?? ((_delta > 0) ? Direction.forward : Direction.backward);
+    _direction =
+        _direction ?? ((_delta > 0) ? Direction.forward : Direction.backward);
     switch (_direction!) {
       case Direction.forward:
         final pos = _delta / _bgSize.width;
@@ -159,7 +182,8 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
             currentLeaf = controller.currentOrTurningLeaves.item1!;
           }
         }
-        controller.currentOrTurningLeaves.item1!.animationController.value = pos;
+        controller.currentOrTurningLeaves.item1!.animationController.value =
+            pos;
     }
   }
 
@@ -174,14 +198,16 @@ class FlipBookState extends State<FlipBook> with TickerProviderStateMixin, Autom
     final turningLeafAnimCtrl = currentLeaf!.animationController;
     switch (_direction!) {
       case Direction.forward:
-        if (((isLTR ? pps.dx < -fastDx : pps.dx > fastDx) || turningLeafAnimCtrl.value >= 0.5)) {
+        if (((isLTR ? pps.dx < -fastDx : pps.dx > fastDx) ||
+            turningLeafAnimCtrl.value >= 0.5)) {
           animate = turningLeafAnimCtrl.forward;
         } else {
           animate = turningLeafAnimCtrl.reverse;
         }
         break;
       case Direction.backward:
-        if (((isLTR ? pps.dx > fastDx : pps.dx < -fastDx) || turningLeafAnimCtrl.value <= 0.5)) {
+        if (((isLTR ? pps.dx > fastDx : pps.dx < -fastDx) ||
+            turningLeafAnimCtrl.value <= 0.5)) {
           animate = turningLeafAnimCtrl.reverse;
         } else {
           animate = turningLeafAnimCtrl.forward;

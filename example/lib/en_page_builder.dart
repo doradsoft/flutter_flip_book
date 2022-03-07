@@ -32,7 +32,8 @@ const enPages = [
   "101-learn-materialize.md",
   "999-conclusion.md"
 ];
-Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) => LayoutBuilder(builder: (context, constraints) {
+Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) =>
+    LayoutBuilder(builder: (context, constraints) {
       Widget pageBody = const SizedBox.shrink();
       final pageBG = Column(
         children: [
@@ -51,14 +52,22 @@ Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) => LayoutBu
               Expanded(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(MediaQuery.of(context).size.width * borderFactor),
-                          bottomRight: Radius.circular(MediaQuery.of(context).size.width * borderFactor)),
+                          topRight: Radius.circular(
+                              MediaQuery.of(context).size.width * borderFactor),
+                          bottomRight: Radius.circular(
+                              MediaQuery.of(context).size.width *
+                                  borderFactor)),
                       child: Container(
                         decoration: BoxDecoration(
                             color: coverColor,
                             image: DecorationImage(
                                 image: AssetImage(
-                                  path.join(kIsWeb ? "" : "assets", "pages_data", "en", "assets", "cover.jpg"),
+                                  path.join(
+                                      kIsWeb ? "" : "assets",
+                                      "pages_data",
+                                      "en",
+                                      "assets",
+                                      "cover.jpg"),
                                 ),
                                 fit: BoxFit.cover)),
                       ))),
@@ -71,16 +80,22 @@ Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) => LayoutBu
               Expanded(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(MediaQuery.of(context).size.width * borderFactor),
-                          bottomLeft: Radius.circular(MediaQuery.of(context).size.width * borderFactor)),
+                          topLeft: Radius.circular(
+                              MediaQuery.of(context).size.width * borderFactor),
+                          bottomLeft: Radius.circular(
+                              MediaQuery.of(context).size.width *
+                                  borderFactor)),
                       child: Container(
                         color: coverColor,
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * frameFactorW,
-                                MediaQuery.of(context).size.height * frameFactorH,
+                                MediaQuery.of(context).size.width *
+                                    frameFactorW,
+                                MediaQuery.of(context).size.height *
+                                    frameFactorH,
                                 0,
-                                MediaQuery.of(context).size.height * frameFactorH),
+                                MediaQuery.of(context).size.height *
+                                    frameFactorH),
                             child: Container(color: Colors.white)),
                       ))),
             ],
@@ -101,16 +116,22 @@ Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) => LayoutBu
               Expanded(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(MediaQuery.of(context).size.width * borderFactor),
-                          bottomRight: Radius.circular(MediaQuery.of(context).size.width * borderFactor)),
+                          topRight: Radius.circular(
+                              MediaQuery.of(context).size.width * borderFactor),
+                          bottomRight: Radius.circular(
+                              MediaQuery.of(context).size.width *
+                                  borderFactor)),
                       child: Container(
                         color: coverColor,
                         child: Padding(
                             padding: EdgeInsets.fromLTRB(
                                 0,
-                                MediaQuery.of(context).size.height * frameFactorH,
-                                MediaQuery.of(context).size.width * frameFactorW,
-                                MediaQuery.of(context).size.height * frameFactorH),
+                                MediaQuery.of(context).size.height *
+                                    frameFactorH,
+                                MediaQuery.of(context).size.width *
+                                    frameFactorW,
+                                MediaQuery.of(context).size.height *
+                                    frameFactorH),
                             child: Container(color: Colors.white)),
                       ))),
             ],
@@ -122,15 +143,19 @@ Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) => LayoutBu
               Expanded(
                   child: ClipRRect(
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(MediaQuery.of(context).size.width * borderFactor),
-                          bottomLeft: Radius.circular(MediaQuery.of(context).size.width * borderFactor)),
+                          topLeft: Radius.circular(
+                              MediaQuery.of(context).size.width * borderFactor),
+                          bottomLeft: Radius.circular(
+                              MediaQuery.of(context).size.width *
+                                  borderFactor)),
                       child: Container(color: coverColor))),
             ],
           );
           break;
         default:
           bg = pageBG;
-          final mdFilePath = path.join(kIsWeb ? "" : "assets", "pages_data", "en", "content", enPages[pageIndex - 5]);
+          final mdFilePath = path.join(kIsWeb ? "" : "assets", "pages_data",
+              "en", "content", enPages[pageIndex - 5]);
           pageBody = SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxHeight: constraints.maxHeight),
@@ -145,7 +170,9 @@ Widget enPageBuilder(context, pageSize, pageIndex, semanticPageName) => LayoutBu
                               String data = snapshot.data ?? "";
                               if (data.isNotEmpty) {
                                 data = data.replaceAll(
-                                    "../assets", path.join(kIsWeb ? "" : "assets", "pages_data", "en", "assets"));
+                                    "../assets",
+                                    path.join(kIsWeb ? "" : "assets",
+                                        "pages_data", "en", "assets"));
                               }
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),

@@ -40,11 +40,14 @@ Widget hePageBuilder(context, pageSize, pageIndex, semanticPageName) {
   );
 }
 
-final PageSemantics hePageSemantics = PageSemantics(indexToSemanticName: (pageIndex) {
+final PageSemantics hePageSemantics =
+    PageSemantics(indexToSemanticName: (pageIndex) {
   return hePageSemanticsDict[pageIndex] ?? "";
 }, semanticNameToIndex: (String semanticPageName) {
   return hePageSemanticsDict.containsValue(semanticPageName)
-      ? hePageSemanticsDict.entries.firstWhere((entry) => entry.value == semanticPageName).key
+      ? hePageSemanticsDict.entries
+          .firstWhere((entry) => entry.value == semanticPageName)
+          .key
       : null;
 }, indexToTitle: (pageIndex) {
   final chapter = hePageSemanticsDict[pageIndex];

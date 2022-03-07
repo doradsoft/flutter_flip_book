@@ -1,6 +1,6 @@
 name: flip_book
 description: flip_book is a Flutter flip book component. `FlipBook` Widget + `FlipBookController` for controlling it anywhere.
-version: 0.0.1+2
+version: 0.0.1+3
 homepage: https://github.com/doradsoft/flutter_flip_book
 
 environment:

@@ -27,7 +27,8 @@ class PageBuilderDelegate extends PageDelegate {
 
   final Map<int, Widget> cachedPages = {};
 
-  PageBuilderDelegate(this.builder, this.pageSemantics, {pageCount, this.addAutomaticKeepAlives = false})
+  PageBuilderDelegate(this.builder, this.pageSemantics,
+      {pageCount, this.addAutomaticKeepAlives = false})
       : super(pageCount);
 
   @override
@@ -39,7 +40,8 @@ class PageBuilderDelegate extends PageDelegate {
       if (cachedPages.containsKey(index)) {
         page = cachedPages[index]!;
       } else {
-        page = builder(context, pageSize, index, pageSemantics?.indexToSemanticName(index));
+        page = builder(context, pageSize, index,
+            pageSemantics?.indexToSemanticName(index));
         cachedPages[index] = page;
       }
     } catch (exception, stackTrace) {

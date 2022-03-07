@@ -17,9 +17,10 @@ class FlipBookControllers extends ChangeNotifier {
   }
 
   FlipBookControllers() {
-    Set.from({flipBookControllerEN, flipBookControllerHE}).forEach((changeNotifier) => changeNotifier.addListener(() {
-          if (!_disposed) notifyListeners();
-        }));
+    Set.from({flipBookControllerEN, flipBookControllerHE})
+        .forEach((changeNotifier) => changeNotifier.addListener(() {
+              if (!_disposed) notifyListeners();
+            }));
   }
 }
 
@@ -39,15 +40,17 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final flipBookToolbarItemsConfigEN = FlipBookToolbarItemsConfig(locale: FlipBookLocales.en);
-  final flipBookToolbarItemsConfigHE =
-      FlipBookToolbarItemsConfig(locale: FlipBookLocales.he, direction: TextDirection.rtl);
+  final flipBookToolbarItemsConfigEN =
+      FlipBookToolbarItemsConfig(locale: FlipBookLocales.en);
+  final flipBookToolbarItemsConfigHE = FlipBookToolbarItemsConfig(
+      locale: FlipBookLocales.he, direction: TextDirection.rtl);
 
   MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    FlipBookControllers buildFlipBookControllers = Provider.of<FlipBookControllers>(context);
+    FlipBookControllers buildFlipBookControllers =
+        Provider.of<FlipBookControllers>(context);
     return MaterialApp(
       title: 'Flip book example',
       theme: ThemeData(
@@ -56,7 +59,8 @@ class MyApp extends StatelessWidget {
       home: Row(
         children: [
           Visibility(
-            visible: !buildFlipBookControllers.flipBookControllerHE.isFullScreen,
+            visible:
+                !buildFlipBookControllers.flipBookControllerHE.isFullScreen,
             child: Expanded(
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 AppBar(
@@ -64,17 +68,25 @@ class MyApp extends StatelessWidget {
                   centerTitle: true,
                   title: Row(mainAxisSize: MainAxisSize.min, children: [
                     FlipBookToolbarItemFullscreen(
-                            buildFlipBookControllers.flipBookControllerEN, flipBookToolbarItemsConfigEN)
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
                         .child,
                     FlipBookToolbarItemCover(
-                            buildFlipBookControllers.flipBookControllerEN, flipBookToolbarItemsConfigEN)
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
                         .child,
-                    FlipBookToolbarItemPrev(buildFlipBookControllers.flipBookControllerEN, flipBookToolbarItemsConfigEN)
+                    FlipBookToolbarItemPrev(
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
                         .child,
-                    FlipBookToolbarItemNext(buildFlipBookControllers.flipBookControllerEN, flipBookToolbarItemsConfigEN)
+                    FlipBookToolbarItemNext(
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN)
                         .child,
                     FlipBookToolbarItemTOC(
-                            buildFlipBookControllers.flipBookControllerEN, flipBookToolbarItemsConfigEN, 5)
+                            buildFlipBookControllers.flipBookControllerEN,
+                            flipBookToolbarItemsConfigEN,
+                            5)
                         .child,
                   ]),
                 ),
@@ -89,7 +101,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: !buildFlipBookControllers.flipBookControllerEN.isFullScreen ||
+            visible: !buildFlipBookControllers
+                    .flipBookControllerEN.isFullScreen ||
                 (buildFlipBookControllers.flipBookControllerHE.isFullScreen &&
                     buildFlipBookControllers.flipBookControllerEN.isFullScreen),
             // visible: true,
@@ -102,19 +115,25 @@ class MyApp extends StatelessWidget {
                     centerTitle: true,
                     title: Row(mainAxisSize: MainAxisSize.min, children: [
                       FlipBookToolbarItemFullscreen(
-                              buildFlipBookControllers.flipBookControllerHE, flipBookToolbarItemsConfigHE)
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
                           .child,
                       FlipBookToolbarItemCover(
-                              buildFlipBookControllers.flipBookControllerHE, flipBookToolbarItemsConfigHE)
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
                           .child,
                       FlipBookToolbarItemPrev(
-                              buildFlipBookControllers.flipBookControllerHE, flipBookToolbarItemsConfigHE)
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
                           .child,
                       FlipBookToolbarItemNext(
-                              buildFlipBookControllers.flipBookControllerHE, flipBookToolbarItemsConfigHE)
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE)
                           .child,
                       FlipBookToolbarItemTOC(
-                              buildFlipBookControllers.flipBookControllerHE, flipBookToolbarItemsConfigHE, 5)
+                              buildFlipBookControllers.flipBookControllerHE,
+                              flipBookToolbarItemsConfigHE,
+                              5)
                           .child,
                     ]),
                   ),

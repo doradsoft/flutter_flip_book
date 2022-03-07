@@ -6,7 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="flickering fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/example/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/en_page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/en_page_builder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/he_page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/he_page_builder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/book.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/book_state.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book_state.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_builder.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/widgets_ext/multi_animated_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widgets_ext/multi_animated_builder.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

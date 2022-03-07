@@ -17,17 +17,24 @@ class FlipBook extends StatefulWidget {
   static const _defaultBufferSize = 2;
   static const _defaultPadding = EdgeInsets.all(10);
 
-  static Locale localeInit(Locale? locale) => locale ?? Locale(intl.Intl.getCurrentLocale());
-  static TextDirection directionInit(TextDirection? direction, Locale? locale) =>
-      direction ?? (intl.Bidi.isRtlLanguage(localeInit(locale).languageCode) ? TextDirection.rtl : TextDirection.ltr);
-  static bool aspectRatioValidation(AspectRatioFraction coverAspectRatio, AspectRatioFraction leafAspectRatio) =>
+  static Locale localeInit(Locale? locale) =>
+      locale ?? Locale(intl.Intl.getCurrentLocale());
+  static TextDirection directionInit(
+          TextDirection? direction, Locale? locale) =>
+      direction ??
+      (intl.Bidi.isRtlLanguage(localeInit(locale).languageCode)
+          ? TextDirection.rtl
+          : TextDirection.ltr);
+  static bool aspectRatioValidation(AspectRatioFraction coverAspectRatio,
+          AspectRatioFraction leafAspectRatio) =>
       coverAspectRatio.heightFactor != 0 &&
       coverAspectRatio.widthFactor != 0 &&
       leafAspectRatio.heightFactor != 0 &&
       leafAspectRatio.widthFactor != 0 &&
       coverAspectRatio.widthFactor >= leafAspectRatio.widthFactor &&
       coverAspectRatio.heightFactor >= leafAspectRatio.heightFactor;
-  static bool totalPagesValidation(int? totalPages) => totalPages != null && totalPages >= 4 && totalPages % 2 == 0;
+  static bool totalPagesValidation(int? totalPages) =>
+      totalPages != null && totalPages >= 4 && totalPages % 2 == 0;
   final bool addAutomaticKeepAlives;
 
   /// The axis along which the book pages flip.
@@ -92,7 +99,8 @@ class FlipBook extends StatefulWidget {
     required PageBuilder pageBuilder,
     this.pageSemantics,
     int? totalPages,
-  })  : assert(totalPagesValidation(controller?.totalPages) || totalPagesValidation(totalPages)),
+  })  : assert(totalPagesValidation(controller?.totalPages) ||
+            totalPagesValidation(totalPages)),
         assert(aspectRatioValidation(coverAspectRatio, leafAspectRatio)),
         controller = controller ?? FlipBookController(totalPages: totalPages!),
         locale = localeInit(locale),
