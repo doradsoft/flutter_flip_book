@@ -1,7 +1,8 @@
 library flip_book;
 
-export 'src/controller/book_controller.dart';
+export 'src/aspect_ratio_fraction.dart';
 export 'src/ensure_initialized.dart';
+export 'src/controller/book_controller.dart';
 export 'src/intl/locales.dart';
 export 'src/intl/texts.dart';
 export 'src/widget/book.dart';

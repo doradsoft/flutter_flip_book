@@ -6,16 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="bdf984cc-97f8-4823-8d32-249ac113675a" name="Default Changelist" comment="flickering fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/en_page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/en_page_builder.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/he_page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/he_page_builder.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/example/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/book.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/book_state.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/book_state.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_builder.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_builder_delegate.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widget/page_delegate/page_list_delegate.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/widgets_ext/multi_animated_builder.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/widgets_ext/multi_animated_builder.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/flip_book.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/flip_book.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +40,7 @@
     <property name="cidr.known.project.marker" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../../../../dudu/flutter_web_bug" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../tanah_app_web" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
